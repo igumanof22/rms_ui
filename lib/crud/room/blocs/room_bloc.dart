@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rms_ui/common/blocs.dart';
-import 'package:rms_ui/common/services.dart';
-import 'package:rms_ui/common/models.dart';
+import 'package:rms_ui/barrel/blocs.dart';
+import 'package:rms_ui/barrel/services.dart';
+import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:rms_ui/common/blocs.dart';
-import 'package:rms_ui/common/models.dart';
-import 'package:rms_ui/common/screens.dart';
+import 'package:rms_ui/barrel/blocs.dart';
+import 'package:rms_ui/barrel/models.dart';
+import 'package:rms_ui/barrel/screens.dart';
 
 class HomeUsersScreen extends StatefulWidget {
   const HomeUsersScreen({Key? key}) : super(key: key);

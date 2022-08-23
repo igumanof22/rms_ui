@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
-import 'package:rms_ui/common/blocs.dart';
-import 'package:rms_ui/common/models.dart';
+import 'package:rms_ui/barrel/blocs.dart';
+import 'package:rms_ui/barrel/models.dart';
 
 class CreateEquipmentScreen extends StatefulWidget {
   const CreateEquipmentScreen({Key? key}) : super(key: key);

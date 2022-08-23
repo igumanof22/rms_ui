@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rms_ui/common/blocs.dart';
+import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/crud/furniture/furniture.dart';
-import 'package:rms_ui/common/services.dart';
+import 'package:rms_ui/barrel/services.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {

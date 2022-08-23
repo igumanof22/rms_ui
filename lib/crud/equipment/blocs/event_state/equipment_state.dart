@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:rms_ui/common/models.dart';
+import 'package:rms_ui/barrel/models.dart';
 
 abstract class EquipmentState extends Equatable {
   @override

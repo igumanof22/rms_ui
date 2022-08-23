@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:rms_ui/common/blocs.dart';
-import 'package:rms_ui/common/screens.dart';
-import 'package:rms_ui/common/services.dart';
+import 'package:rms_ui/barrel/blocs.dart';
+import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/barrel/services.dart';
 
 void main() {
   // init api

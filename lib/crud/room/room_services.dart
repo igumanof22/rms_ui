@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:rms_ui/common/models.dart';
+import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/services/api.dart';
 
 class RoomService {
