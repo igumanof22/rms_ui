@@ -46,7 +46,7 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
     }
   }
 
-  void _EquipmentListener(BuildContext context, EquipmentState state) {
+  void _equipmentListener(BuildContext context, EquipmentState state) {
     if (state is EquipmentLoading) {
       setState(() => _isLoading = true);
     }
@@ -63,7 +63,7 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<EquipmentBloc, EquipmentState>(
-      listener: _EquipmentListener,
+      listener: _equipmentListener,
       child: Scaffold(
         appBar: AppBar(title: const Text('Create Equipment')),
         body: Form(
