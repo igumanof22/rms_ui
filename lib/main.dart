@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => EquipmentBloc()),
       ],
       child: GetMaterialApp(
-        title: 'Simple Crud',
+        title: 'Room Management',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
