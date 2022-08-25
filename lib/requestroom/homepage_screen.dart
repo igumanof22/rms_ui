@@ -28,8 +28,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
     super.initState();
   }
 
-  void _toCreateUsersAction() {
-    Get.to(() => const CreateUsersScreen());
+  void _toCreateRequestAction() {
+    Get.to(() => const CreateRequestRoomScreen());
   }
 
   @override
@@ -162,7 +162,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _toCreateUsersAction,
+        onPressed: _toCreateRequestAction,
         mini: true,
         child: const Icon(Icons.add, size: 17),
       ),

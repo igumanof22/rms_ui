@@ -41,8 +41,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       showSnackbar('Sukses tambah Users');
 
       emit(UsersCreateSuccess());
-
-      add(UsersFetch());
     } catch (e) {
       log(e.toString(), name: 'UsersBloc - _onCreate');
 
