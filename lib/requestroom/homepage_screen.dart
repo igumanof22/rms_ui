@@ -81,15 +81,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.red.shade400,
-                                ),
-                                child: const Text('Hapus'),
-                              ),
-                            ),
                           ],
                         )
                       ],
