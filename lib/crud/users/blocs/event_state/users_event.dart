@@ -18,3 +18,13 @@ class UsersCreate extends UsersEvent {
   @override
   List<Object?> get props => [Users];
 }
+
+class UsersLogin extends UsersEvent {
+  final String username;
+  final String password;
+
+  UsersLogin({required this.username, required this.password});
+
+  @override
+  List<Object?> get props => [username, password];
+}

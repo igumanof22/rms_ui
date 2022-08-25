@@ -41,3 +41,23 @@ class Users {
     );
   }
 }
+
+class UsersLoginModel {
+  final String email;
+  final String name;
+  final String role;
+
+  UsersLoginModel({
+    required this.email,
+    required this.name,
+    required this.role,
+  });
+
+  factory UsersLoginModel.fromMap(dynamic map) {
+    return UsersLoginModel(
+      email: map['email'],
+      name: map['name'],
+      role: map['role'],
+    );
+  }
+}

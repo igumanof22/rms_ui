@@ -5,9 +5,11 @@ import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/screens.dart';
 import 'package:rms_ui/barrel/services.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
   // init api
-  API.instance.init();
+  await App.instance.init();
 
   runApp(const MyApp());
 }
@@ -18,14 +20,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => UsersBloc()),
+        BlocProvider(create: (_) => RequestRoomBloc()),
+        BlocProvider(create: (_) => FurnitureBloc()),
         BlocProvider(create: (_) => EquipmentBloc()),
+        BlocProvider(create: (_) => RoomBloc()),
       ],
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Room Management',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const ListEquipmentScreen(),
+        home: const HomePageScreen(),
       ),
     );
   }

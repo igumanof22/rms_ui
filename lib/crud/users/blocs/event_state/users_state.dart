@@ -14,6 +14,8 @@ class UsersError extends UsersState {}
 
 class UsersCreateSuccess extends UsersState {}
 
+class UsersLoginSuccess extends UsersState {}
+
 class UsersInitialized extends UsersState {
   final List<Users> listUsers;
 

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rms.rms_ui">
    <application
-        android:label="rms_ui"
+        android:label="RM"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

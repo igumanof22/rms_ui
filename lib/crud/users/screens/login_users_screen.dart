@@ -3,20 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
-import 'package:rms_ui/barrel/models.dart';
+import 'package:rms_ui/barrel/screens.dart';
 
-class CreateUsersScreen extends StatefulWidget {
-  const CreateUsersScreen({Key? key}) : super(key: key);
+class LoginUsersScreen extends StatefulWidget {
+  const LoginUsersScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateUsersScreen> createState() => _CreateUsersScreenState();
+  State<LoginUsersScreen> createState() => _LoginUsersScreenState();
 }
 
-class _CreateUsersScreenState extends State<CreateUsersScreen> {
+class _LoginUsersScreenState extends State<LoginUsersScreen> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
   bool _isLoading = false;
@@ -32,23 +30,20 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
   void dispose() {
     _userNameController.dispose();
     _passwordController.dispose();
-    _emailController.dispose();
-    _nameController.dispose();
 
     super.dispose();
   }
 
-  void _submitAction() {
+  void _loginAction() {
     if (_form.currentState!.validate()) {
-      Users users = Users(
-        username: _userNameController.text.trim(),
-        password: _passwordController.text.trim(),
-        email: _emailController.text.trim(),
-        name: _nameController.text.trim(),
-      );
-
-      _usersBloc.add(UsersCreate(users: users));
+      _usersBloc.add(UsersLogin(
+          username: _userNameController.text.trim(),
+          password: _passwordController.text.trim()));
     }
+  }
+
+  void _signUpAction() {
+    Get.to(() => const CreateUsersScreen());
   }
 
   void _usersListener(BuildContext context, UsersState state) {
@@ -56,11 +51,11 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
       setState(() => _isLoading = true);
     }
 
-    if (state is UsersCreateSuccess || state is UsersError) {
+    if (state is UsersLoginSuccess || state is UsersError) {
       setState(() => _isLoading = false);
 
-      if (state is UsersCreateSuccess) {
-        Get.back();
+      if (state is UsersLoginSuccess) {
+        Get.off(() => const HomePageScreen());
       }
     }
   }
@@ -70,7 +65,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
     return BlocListener<UsersBloc, UsersState>(
       listener: _usersListener,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Users')),
+        appBar: AppBar(title: const Text('Login')),
         body: Form(
           key: _form,
           child: ListView(
@@ -92,23 +87,6 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                 ),
                 readOnly: _isLoading,
               ),
-              TextFormField(
-                controller: _emailController,
-                validator: ValidationBuilder().required().build(),
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: 'Email',
-                ),
-                readOnly: _isLoading,
-              ),
-              TextFormField(
-                controller: _nameController,
-                validator: ValidationBuilder().required().build(),
-                decoration: const InputDecoration(
-                  hintText: 'Nama',
-                ),
-                readOnly: _isLoading,
-              ),
               const SizedBox(height: 50),
               _isLoading
                   ? Wrap(
@@ -118,9 +96,20 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                       ],
                     )
                   : ElevatedButton(
-                      onPressed: _submitAction,
-                      child: const Text('Submit'),
+                      onPressed: _loginAction,
+                      child: const Text('Login'),
                     ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Belum punya akun? '),
+                  GestureDetector(
+                    onTap: _signUpAction,
+                    child: const Text('Daftar', style: TextStyle(color: Colors.blue,)),
+                  )
+                ],
+              )
             ],
           ),
         ),

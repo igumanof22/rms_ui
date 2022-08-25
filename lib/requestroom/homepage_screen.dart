@@ -4,41 +4,45 @@ import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/barrel/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeEquipmentScreen extends StatefulWidget {
-  const HomeEquipmentScreen({Key? key}) : super(key: key);
+class HomePageScreen extends StatefulWidget {
+  const HomePageScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeEquipmentScreen> createState() => _HomeEquipmentScreenState();
+  State<HomePageScreen> createState() => _HomePageScreenState();
 }
 
-class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
-  late EquipmentBloc _equipmentBloc;
+class _HomePageScreenState extends State<HomePageScreen> {
+  final SharedPreferences pref = App.instance.pref;
+  late String? role;
+  late RequestRoomBloc _requestRoomBloc;
 
   @override
   void initState() {
-    _equipmentBloc = BlocProvider.of(context);
-
-    _equipmentBloc.add(EquipmentFetch());
+    _requestRoomBloc = BlocProvider.of(context);
+    role = pref.getString('role');
+    _requestRoomBloc.add(RequestRoomFetch());
 
     super.initState();
   }
 
-  void _toCreateEquipmentAction() {
-    Get.to(() => const CreateEquipmentScreen());
+  void _toCreateUsersAction() {
+    Get.to(() => const CreateUsersScreen());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Crud')),
-      body: BlocBuilder<EquipmentBloc, EquipmentState>(
+      appBar: AppBar(title: const Text('Manajemen Ruang')),
+      body: BlocBuilder<RequestRoomBloc, RequestRoomState>(
         builder: (context, state) {
-          if (state is EquipmentInitialized) {
+          if (state is RequestRoomInitialized) {
             return ListView.builder(
-              itemCount: state.listEquipment.length,
+              itemCount: state.listRequestRoom.length,
               itemBuilder: (context, index) {
-                Equipment equipment = state.listEquipment[index];
+                RequestRoom requestRoom = state.listRequestRoom[index];
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
@@ -64,7 +68,7 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(equipment.nama),
+                            Text(requestRoom.requestId!),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -101,8 +105,64 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
           );
         },
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.black),
+              padding: EdgeInsets.zero,
+              child: Image.network('https://picsum.photos/seed/picsum/800/800',
+                  fit: BoxFit.fill),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Get.off(const HomePageScreen());
+              },
+            ),
+            ListTile(
+              title: const Text('Ruangan'),
+              onTap: () {
+                Get.to(const HomeRoomScreen());
+              },
+            ),
+            ListTile(
+              title: const Text('Furnitur'),
+              onTap: () {
+                Get.to(const HomeFurnitureScreen());
+              },
+            ),
+            if (role == null)
+              ListTile(
+                title: const Text('Peralatan'),
+                onTap: () {
+                  Get.to(const HomeEquipmentScreen());
+                },
+              ),
+            ListTile(
+              title: const Text('Akun'),
+              onTap: () {
+                Get.to(const HomeUsersScreen());
+              },
+            ),
+            ListTile(
+              title: const Text('Request Peminjaman'),
+              onTap: () {
+                Get.to(const CreateRequestRoomScreen());
+              },
+            ),
+            ListTile(
+              title: const Text('Profil'),
+              onTap: () {
+                Get.to(const CreateUsersScreen());
+              },
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _toCreateEquipmentAction,
+        onPressed: _toCreateUsersAction,
         mini: true,
         child: const Icon(Icons.add, size: 17),
       ),

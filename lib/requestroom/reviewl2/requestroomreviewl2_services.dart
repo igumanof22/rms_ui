@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:rms_ui/barrel/models.dart';
-import 'package:rms_ui/services/api.dart';
+import 'package:rms_ui/services/app.dart';
 
 class RequestRoomReviewL2Service {
-  static final Dio _dio = API.instance.dio;
+  static final Dio _dio = App.instance.dio;
 
   static Future<List<RequestRoom>> fetch() async {
     Response response = await _dio.get('/bpmn/requestRoom/reviewRequestL2');
