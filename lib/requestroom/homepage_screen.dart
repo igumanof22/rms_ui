@@ -72,17 +72,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: const Text('Edit'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        )
                       ],
                     ),
                   ),
