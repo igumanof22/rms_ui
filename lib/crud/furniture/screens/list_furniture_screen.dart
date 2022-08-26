@@ -28,10 +28,18 @@ class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
     Get.to(() => const CreateFurnitureScreen());
   }
 
+  void _toEditFurnitureAction(String id) {
+    Get.to(() => CreateFurnitureScreen(id: id));
+  }
+
+  void _toDeleteFurnitureAction(String id) {
+    _furnitureBloc.add(FurnitureDelete(id: id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Crud')),
+      appBar: AppBar(title: const Text('Daftar Furnitur')),
       body: BlocBuilder<FurnitureBloc, FurnitureState>(
         builder: (context, state) {
           if (state is FurnitureInitialized) {
@@ -72,14 +80,14 @@ class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () => _toEditFurnitureAction(furniture.id!),
                                 child: const Text('Edit'),
                               ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () => _toDeleteFurnitureAction(furniture.id!),
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.red.shade400,
                                 ),

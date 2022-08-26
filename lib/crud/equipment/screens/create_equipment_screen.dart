@@ -4,9 +4,11 @@ import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
+import 'package:rms_ui/barrel/services.dart';
 
 class CreateEquipmentScreen extends StatefulWidget {
-  const CreateEquipmentScreen({Key? key}) : super(key: key);
+  final String? id;
+  const CreateEquipmentScreen({Key? key, this.id}) : super(key: key);
 
   @override
   State<CreateEquipmentScreen> createState() => _CreateEquipmentScreenState();
@@ -14,16 +16,17 @@ class CreateEquipmentScreen extends StatefulWidget {
 
 class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final List<String> _class = ['XI MIPA 1', 'XI MIPA 2', 'XI MIPA 3'];
   final GlobalKey<FormState> _form = GlobalKey();
   late EquipmentBloc _equipmentBloc;
-  String? _selectedClass;
   bool _isLoading = false;
 
   @override
   void initState() {
     _equipmentBloc = BlocProvider.of(context);
+
+    if (widget.id != null) {
+      _equipmentBloc.add(EquipmentGet(id: widget.id!));
+    }
 
     super.initState();
   }
@@ -31,18 +34,26 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _dateController.dispose();
 
     super.dispose();
   }
 
   void _submitAction() {
     if (_form.currentState!.validate()) {
-      Equipment equipment = Equipment(
-        nama: _nameController.text.trim(),
-      );
+      if (widget.id == null) {
+        Equipment equipment = Equipment(
+          nama: _nameController.text.trim(),
+        );
+        _equipmentBloc.add(EquipmentCreate(equipment: equipment));
+      }
 
-      _equipmentBloc.add(EquipmentCreate(equipment: equipment));
+      if (widget.id != null) {
+        Equipment equipment = Equipment(
+          nama: _nameController.text.trim(),
+        );
+        _equipmentBloc
+            .add(EquipmentUpdate(id: widget.id!, equipment: equipment));
+      }
     }
   }
 
@@ -51,12 +62,18 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
       setState(() => _isLoading = true);
     }
 
-    if (state is EquipmentCreateSuccess || state is EquipmentError) {
+    if (state is EquipmentSuccess || state is EquipmentError) {
       setState(() => _isLoading = false);
 
-      if (state is EquipmentCreateSuccess) {
+      if (state is EquipmentSuccess) {
         Get.back();
       }
+    }
+
+    if (state is EquipmentGetData) {
+      setState(() => _isLoading = false);
+
+      _nameController.text = state.equipment.nama;
     }
   }
 
@@ -65,7 +82,9 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
     return BlocListener<EquipmentBloc, EquipmentState>(
       listener: _equipmentListener,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Equipment')),
+        appBar: AppBar(
+            title: Text(
+                widget.id == null ? 'Tambah Peralatan' : 'Ubah Peralatan')),
         body: Form(
           key: _form,
           child: ListView(
@@ -78,20 +97,6 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
                   hintText: 'Nama Equipment',
                 ),
                 readOnly: _isLoading,
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedClass,
-                hint: const Text('Pilih kelas'),
-                validator: ValidationBuilder().required().build(),
-                items: _class
-                    .map((e) => DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(e),
-                        ))
-                    .toList(),
-                onChanged: _isLoading
-                    ? null
-                    : (selectedClass) => _selectedClass = selectedClass,
               ),
               const SizedBox(height: 50),
               _isLoading

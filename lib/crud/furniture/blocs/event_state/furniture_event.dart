@@ -10,11 +10,38 @@ class FurnitureFetch extends FurnitureEvent {
   FurnitureFetch();
 }
 
+class FurnitureGet extends FurnitureEvent {
+  final String id;
+
+  FurnitureGet({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class FurnitureCreate extends FurnitureEvent {
   final Furniture furniture;
 
   FurnitureCreate({required this.furniture});
 
   @override
-  List<Object?> get props => [Furniture];
+  List<Object?> get props => [furniture];
+}
+
+class FurnitureUpdate extends FurnitureEvent {
+  final String id;
+  final Furniture furniture;
+
+  FurnitureUpdate({required this.id, required this.furniture});
+
+  @override
+  List<Object?> get props => [id, furniture];
+}
+
+class FurnitureDelete extends FurnitureEvent {
+  final String id;
+  FurnitureDelete({required this.id});
+
+  @override
+  List<Object?> get props => [id];
 }

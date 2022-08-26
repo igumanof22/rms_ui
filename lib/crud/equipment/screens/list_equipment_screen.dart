@@ -18,7 +18,6 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
   @override
   void initState() {
     _equipmentBloc = BlocProvider.of(context);
-
     _equipmentBloc.add(EquipmentFetch());
 
     super.initState();
@@ -28,10 +27,18 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
     Get.to(() => const CreateEquipmentScreen());
   }
 
+  void _toEditEquipmentAction(String id) {
+    Get.to(() => CreateEquipmentScreen(id: id));
+  }
+
+  void _toDeleteEquipmentAction(String id) {
+    _equipmentBloc.add(EquipmentDelete(id: id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Crud')),
+      appBar: AppBar(title: const Text('Daftar Peralatan')),
       body: BlocBuilder<EquipmentBloc, EquipmentState>(
         builder: (context, state) {
           if (state is EquipmentInitialized) {
@@ -72,14 +79,15 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () =>
+                                    _toEditEquipmentAction(equipment.id!),
                                 child: const Text('Edit'),
                               ),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () => _toDeleteEquipmentAction(equipment.id!),
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.red.shade400,
                                 ),

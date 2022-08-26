@@ -22,3 +22,12 @@ class RoomInitialized extends RoomState {
   @override
   List<Object?> get props => [listRoom];
 }
+
+class RoomGetData extends RoomState {
+  final Room room;
+
+  RoomGetData({required this.room});
+
+  @override
+  List<Object?> get props => [room];
+}

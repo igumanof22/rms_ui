@@ -9,7 +9,10 @@ import 'package:rms_ui/widgets/widgets.dart';
 class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
   FurnitureBloc() : super(FurnitureUninitialized()) {
     on(_onCreate);
+    on(_onUpdate);
     on(_onFetch);
+    on(_onGet);
+    on(_onDelete);
   }
 
   Future<void> _onFetch(
@@ -29,6 +32,22 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
     }
   }
 
+  Future<void> _onGet(FurnitureGet event, Emitter<FurnitureState> emit) async {
+    try {
+      emit(FurnitureLoading());
+
+      Furniture furniture = await FurnitureService.get(event.id);
+
+      emit(FurnitureGetData(furniture: furniture));
+    } catch (e) {
+      log(e.toString(), name: 'FurnitureBloc - _onGet');
+
+      showSnackbar('Gagal ambil Furniture', isError: true);
+
+      emit(FurnitureError());
+    }
+  }
+
   Future<void> _onCreate(
       FurnitureCreate event, Emitter<FurnitureState> emit) async {
     try {
@@ -36,15 +55,53 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
 
       await FurnitureService.create(event.furniture);
 
-      showSnackbar('Sukses tambah Furniture');
+      showSnackbar('Sukses tambah Furnitur');
 
-      emit(FurnitureCreateSuccess());
-
-      add(FurnitureFetch());
+      emit(FurnitureSuccess());
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onCreate');
 
-      showSnackbar('Gagal tambah Furniture', isError: true);
+      showSnackbar('Gagal tambah Furnitur', isError: true);
+
+      emit(FurnitureError());
+    }
+  }
+
+  Future<void> _onUpdate(
+      FurnitureUpdate event, Emitter<FurnitureState> emit) async {
+    try {
+      emit(FurnitureLoading());
+
+      await FurnitureService.update(event.id, event.furniture);
+
+      showSnackbar('Sukses ubah Furnitur');
+
+      emit(FurnitureSuccess());
+    } catch (e) {
+      log(e.toString(), name: 'FurnitureBloc - _onUpdate');
+
+      showSnackbar('Gagal ubah Furnitur', isError: true);
+
+      emit(FurnitureError());
+    }
+  }
+
+  Future<void> _onDelete(
+      FurnitureDelete event, Emitter<FurnitureState> emit) async {
+    try {
+      emit(FurnitureLoading());
+
+      await FurnitureService.delete(event.id);
+
+      showSnackbar('Sukses hapus Furnitur');
+
+      emit(FurnitureSuccess());
+
+      add(FurnitureFetch());
+    } catch (e) {
+      log(e.toString(), name: 'FurnitureBloc - _onDelete');
+
+      showSnackbar('Gagal hapus Furnitur', isError: true);
 
       emit(FurnitureError());
     }

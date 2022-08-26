@@ -19,13 +19,25 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _totalCapacityController =
       TextEditingController();
+  final TextEditingController _totalController = TextEditingController();
+  final TextEditingController _conditionController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
+  final ValueNotifier<List<RoomItem>> _items = ValueNotifier([]);
   late RoomBloc _roomBloc;
+  late EquipmentBloc _equipmentBloc;
+  late FurnitureBloc _furnitureBloc;
+  Equipment? _selectedEquipment;
+  Furniture? _selectedFurniture;
   bool _isLoading = false;
 
   @override
   void initState() {
     _roomBloc = BlocProvider.of(context);
+    _equipmentBloc = BlocProvider.of(context);
+    _furnitureBloc = BlocProvider.of(context);
+
+    _equipmentBloc.add(EquipmentFetch());
+    _furnitureBloc.add(FurnitureFetch());
 
     super.initState();
   }
@@ -37,8 +49,116 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     _buildingController.dispose();
     _categoryController.dispose();
     _totalCapacityController.dispose();
+    _totalController.dispose();
+    _conditionController.dispose();
 
     super.dispose();
+  }
+
+  void _addItemAction() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'add_item_dialog',
+      pageBuilder: (context, a1, a2) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BlocBuilder<EquipmentBloc, EquipmentState>(
+                  builder: (context, state) {
+                    if (state is EquipmentInitialized) {
+                      return DropdownButton<Equipment>(
+                        value: _selectedEquipment,
+                        items: state.listEquipment
+                            .map((e) => DropdownMenuItem<Equipment>(
+                                  value: e,
+                                  child: Text(e.nama),
+                                ))
+                            .toList(),
+                        onChanged: _isLoading
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  _selectedEquipment = value;
+                                });
+                              },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                BlocBuilder<FurnitureBloc, FurnitureState>(
+                  builder: (context, state) {
+                    if (state is FurnitureInitialized) {
+                      return DropdownButton<Furniture>(
+                        value: _selectedFurniture,
+                        items: state.listFurniture
+                            .map((e) => DropdownMenuItem<Furniture>(
+                                  value: e,
+                                  child: Text(e.nama),
+                                ))
+                            .toList(),
+                        onChanged: _isLoading
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  _selectedFurniture = value;
+                                });
+                              },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                TextFormField(
+                  controller: _totalController,
+                  decoration: const InputDecoration(
+                    hintText: 'Total Item',
+                  ),
+                ),
+                TextFormField(
+                  controller: _conditionController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: 'Kondisi Item',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    RoomItem item = RoomItem(
+                      equipment: _selectedEquipment,
+                      furniture: _selectedFurniture,
+                      total: int.parse(_totalController.text.trim()),
+                      condition: _conditionController.text.trim(),
+                    );
+
+                    // buat list baru untuk trigger agar biar state ke update
+                    _items.value = List.from(_items.value)..add(item);
+
+                    _totalController.clear();
+                    _conditionController.clear();
+
+                    Get.back();
+                  },
+                  child: const Text('Tambah Perabotan'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, a1, a2, child) {
+        double curve = Curves.elasticInOut.transform(a1.value);
+
+        return Transform.scale(
+          scale: curve,
+          child: child,
+        );
+      },
+    );
   }
 
   void _submitAction() {
@@ -49,6 +169,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
         building: _buildingController.text.trim(),
         category: _categoryController.text.trim(),
         totalCapacity: int.parse(_totalCapacityController.text.trim()),
+        roomItem: _items.value,
       );
 
       _roomBloc.add(RoomCreate(room: room));
@@ -122,6 +243,50 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 readOnly: _isLoading,
               ),
               const SizedBox(height: 50),
+              ElevatedButton(
+                onPressed: _addItemAction,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                ),
+                child: const Text('Add Book'),
+              ),
+              const SizedBox(height: 20),
+              ValueListenableBuilder<List<RoomItem>>(
+                valueListenable: _items,
+                builder: (context, books, child) {
+                  return Column(
+                    children: books
+                        .asMap()
+                        .entries
+                        .map((e) => Row(
+                              children: [
+                                if (e.value.furniture != null)
+                                  Text(e.value.furniture!.nama),
+                                if (e.value.equipment != null)
+                                  Text(e.value.equipment!.nama),
+                                const SizedBox(width: 20),
+                                Text(e.value.total.toString()),
+                                const SizedBox(width: 20),
+                                Text(e.value.condition),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () {
+                                    int index = e.key;
+
+                                    List<RoomItem> items2 =
+                                        List.from(_items.value);
+                                    items2.removeAt(index);
+
+                                    _items.value = items2;
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                ),
+                              ],
+                            ))
+                        .toList(),
+                  );
+                },
+              ),
               _isLoading
                   ? Wrap(
                       alignment: WrapAlignment.center,

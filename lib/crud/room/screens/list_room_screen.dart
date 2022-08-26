@@ -28,10 +28,14 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
     Get.to(() => const CreateRoomScreen());
   }
 
+  void _toDetailRoomAction(List<RoomItem> items, String roomId) {
+    Get.to(() => DetailRoomScreen(items: items, roomId: roomId,));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Crud')),
+      appBar: AppBar(title: const Text('Daftar Ruangan')),
       body: BlocBuilder<RoomBloc, RoomState>(
         builder: (context, state) {
           if (state is RoomInitialized) {
@@ -42,53 +46,60 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1, 2),
-                          spreadRadius: .5,
-                          blurRadius: .5,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(room.nama),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: const Text('Edit'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.red.shade400,
+                  child: GestureDetector(
+                    onTap: () => _toDetailRoomAction(room.roomItem, room.roomId),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 5),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1, 2),
+                            spreadRadius: .5,
+                            blurRadius: .5,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(room.nama),
+                              Text(room.roomId),
+                              Text(room.building),
+                              Text(room.category),
+                              Text(room.totalCapacity.toString()),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  child: const Text('Edit'),
                                 ),
-                                child: const Text('Hapus'),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red.shade400,
+                                  ),
+                                  child: const Text('Hapus'),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );

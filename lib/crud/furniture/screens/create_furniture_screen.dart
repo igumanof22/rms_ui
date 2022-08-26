@@ -6,7 +6,8 @@ import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 
 class CreateFurnitureScreen extends StatefulWidget {
-  const CreateFurnitureScreen({Key? key}) : super(key: key);
+  final String? id;
+  const CreateFurnitureScreen({Key? key, this.id}) : super(key: key);
 
   @override
   State<CreateFurnitureScreen> createState() => _CreateFurnitureScreen();
@@ -14,16 +15,17 @@ class CreateFurnitureScreen extends StatefulWidget {
 
 class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final List<String> _class = ['XI MIPA 1', 'XI MIPA 2', 'XI MIPA 3'];
   final GlobalKey<FormState> _form = GlobalKey();
   late FurnitureBloc _furnitureBloc;
-  String? _selectedClass;
   bool _isLoading = false;
 
   @override
   void initState() {
     _furnitureBloc = BlocProvider.of(context);
+
+    if (widget.id != null) {
+      _furnitureBloc.add(FurnitureGet(id: widget.id!));
+    }
 
     super.initState();
   }
@@ -31,18 +33,28 @@ class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _dateController.dispose();
 
     super.dispose();
   }
 
   void _submitAction() {
     if (_form.currentState!.validate()) {
-      Furniture furniture = Furniture(
-        nama: _nameController.text.trim(),
-      );
+      if (widget.id == null) {
+        Furniture furniture = Furniture(
+          nama: _nameController.text.trim(),
+        );
 
-      _furnitureBloc.add(FurnitureCreate(furniture: furniture));
+        _furnitureBloc.add(FurnitureCreate(furniture: furniture));
+      }
+
+      if (widget.id != null) {
+        Furniture furniture = Furniture(
+          nama: _nameController.text.trim(),
+        );
+
+        _furnitureBloc
+            .add(FurnitureUpdate(id: widget.id!, furniture: furniture));
+      }
     }
   }
 
@@ -51,11 +63,18 @@ class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
       setState(() => _isLoading = true);
     }
 
-    if (state is FurnitureCreateSuccess || state is FurnitureError) {
+    if (state is FurnitureSuccess ||
+        state is FurnitureError) {
       setState(() => _isLoading = false);
 
-      if (state is FurnitureCreateSuccess) {
+      if (state is FurnitureSuccess) {
         Get.back();
+      }
+
+      if (state is FurnitureGetData) {
+        setState(() => _isLoading = false);
+
+        _nameController.text = state.furniture.nama;
       }
     }
   }
@@ -65,7 +84,7 @@ class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
     return BlocListener<FurnitureBloc, FurnitureState>(
       listener: _furnitureListener,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Furniture')),
+        appBar: AppBar(title: Text(widget.id == null ? 'Tambah Furnitur' : 'Edit Furnitur')),
         body: Form(
           key: _form,
           child: ListView(
@@ -78,20 +97,6 @@ class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
                   hintText: 'Nama Furniture',
                 ),
                 readOnly: _isLoading,
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedClass,
-                hint: const Text('Pilih kelas'),
-                validator: ValidationBuilder().required().build(),
-                items: _class
-                    .map((e) => DropdownMenuItem<String>(
-                          value: e,
-                          child: Text(e),
-                        ))
-                    .toList(),
-                onChanged: _isLoading
-                    ? null
-                    : (selectedClass) => _selectedClass = selectedClass,
               ),
               const SizedBox(height: 50),
               _isLoading

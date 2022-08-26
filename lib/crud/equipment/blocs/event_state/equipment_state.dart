@@ -12,7 +12,7 @@ class EquipmentLoading extends EquipmentState {}
 
 class EquipmentError extends EquipmentState {}
 
-class EquipmentCreateSuccess extends EquipmentState {}
+class EquipmentSuccess extends EquipmentState {}
 
 class EquipmentInitialized extends EquipmentState {
   final List<Equipment> listEquipment;
@@ -21,4 +21,13 @@ class EquipmentInitialized extends EquipmentState {
 
   @override
   List<Object?> get props => [listEquipment];
+}
+
+class EquipmentGetData extends EquipmentState {
+  final Equipment equipment;
+
+  EquipmentGetData({required this.equipment});
+
+  @override
+  List<Object?> get props => [equipment];
 }

@@ -18,4 +18,19 @@ class EquipmentService {
       'nama': equipment.nama,
     });
   }
+
+  static Future<Equipment> get(String id) async {
+    Response respone = await _dio.get('/crud/equipment/$id');
+    return Equipment.fromMap(respone);
+  }
+
+  static Future<void> update(String id, Equipment equipment) async {
+    await _dio.post('/crud/equipment/$id', data: {
+      'nama': equipment.nama,
+    });
+  }
+
+  static Future<void> delete(String id) async {
+    await _dio.get('/crud/equipment/$id');
+  }
 }

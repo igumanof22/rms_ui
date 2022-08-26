@@ -13,4 +13,10 @@ class Furniture {
       nama: map['nama'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+    };
+  }
 }

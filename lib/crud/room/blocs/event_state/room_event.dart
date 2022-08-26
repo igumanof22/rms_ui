@@ -10,11 +10,20 @@ class RoomFetch extends RoomEvent {
   RoomFetch();
 }
 
+class RoomGet extends RoomEvent {
+  final String id;
+
+  RoomGet({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class RoomCreate extends RoomEvent {
   final Room room;
 
   RoomCreate({required this.room});
 
   @override
-  List<Object?> get props => [Room];
+  List<Object?> get props => [room];
 }

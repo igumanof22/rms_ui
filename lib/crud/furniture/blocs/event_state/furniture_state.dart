@@ -12,7 +12,7 @@ class FurnitureLoading extends FurnitureState {}
 
 class FurnitureError extends FurnitureState {}
 
-class FurnitureCreateSuccess extends FurnitureState {}
+class FurnitureSuccess extends FurnitureState {}
 
 class FurnitureInitialized extends FurnitureState {
   final List<Furniture> listFurniture;
@@ -21,4 +21,13 @@ class FurnitureInitialized extends FurnitureState {
 
   @override
   List<Object?> get props => [listFurniture];
+}
+
+class FurnitureGetData extends FurnitureState {
+  final Furniture furniture;
+
+  FurnitureGetData({required this.furniture});
+
+  @override
+  List<Object?> get props => [furniture];
 }

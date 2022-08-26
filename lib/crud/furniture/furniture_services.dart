@@ -18,4 +18,19 @@ class FurnitureService {
       'nama': furniture.nama,
     });
   }
+
+  static Future<Furniture> get(String id) async {
+    Response respone = await _dio.get('/crud/furniture/$id');
+    return Furniture.fromMap(respone);
+  }
+
+  static Future<void> update(String id, Furniture furniture) async {
+    await _dio.post('/crud/furniture/$id', data: {
+      'nama': furniture.nama,
+    });
+  }
+
+  static Future<void> delete(String id) async {
+    await _dio.delete('/crud/furniture/$id');
+  }
 }

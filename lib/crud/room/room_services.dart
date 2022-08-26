@@ -13,13 +13,12 @@ class RoomService {
         .toList();
   }
 
+  static Future<Room> get(String id) async {
+    Response respone = await _dio.get('/crud/room/$id');
+    return Room.fromMap(respone);
+  }
+
   static Future<void> create(Room room) async {
-    await _dio.post('/crud/room', data: {
-      'nama': room.nama,
-      'roomId': room.roomId,
-      'building': room.building,
-      'category': room.category,
-      'totalCapacity': room.totalCapacity,
-    });
+    await _dio.post('/crud/room', data: room.toMap());
   }
 }
