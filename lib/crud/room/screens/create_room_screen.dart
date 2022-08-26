@@ -61,91 +61,96 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       barrierDismissible: true,
       barrierLabel: 'add_item_dialog',
       pageBuilder: (context, a1, a2) {
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BlocBuilder<EquipmentBloc, EquipmentState>(
-                  builder: (context, state) {
-                    if (state is EquipmentInitialized) {
-                      return DropdownButton<Equipment>(
-                        value: _selectedEquipment,
-                        items: state.listEquipment
-                            .map((e) => DropdownMenuItem<Equipment>(
-                                  value: e,
-                                  child: Text(e.nama),
-                                ))
-                            .toList(),
-                        onChanged: _isLoading
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  _selectedEquipment = value;
-                                });
-                              },
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                BlocBuilder<FurnitureBloc, FurnitureState>(
-                  builder: (context, state) {
-                    if (state is FurnitureInitialized) {
-                      return DropdownButton<Furniture>(
-                        value: _selectedFurniture,
-                        items: state.listFurniture
-                            .map((e) => DropdownMenuItem<Furniture>(
-                                  value: e,
-                                  child: Text(e.nama),
-                                ))
-                            .toList(),
-                        onChanged: _isLoading
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  _selectedFurniture = value;
-                                });
-                              },
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-                TextFormField(
-                  controller: _totalController,
-                  decoration: const InputDecoration(
-                    hintText: 'Total Item',
+        return WillPopScope(
+          onWillPop: () {
+            return Future.value(true);
+          },
+          child: Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BlocBuilder<EquipmentBloc, EquipmentState>(
+                    builder: (context, state) {
+                      if (state is EquipmentInitialized) {
+                        return DropdownButton<Equipment>(
+                          value: _selectedEquipment,
+                          items: state.listEquipment
+                              .map((e) => DropdownMenuItem<Equipment>(
+                                    value: e,
+                                    child: Text(e.nama),
+                                  ))
+                              .toList(),
+                          onChanged: _isLoading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _selectedEquipment = value;
+                                  });
+                                },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
-                ),
-                TextFormField(
-                  controller: _conditionController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'Kondisi Item',
+                  BlocBuilder<FurnitureBloc, FurnitureState>(
+                    builder: (context, state) {
+                      if (state is FurnitureInitialized) {
+                        return DropdownButton<Furniture>(
+                          value: _selectedFurniture,
+                          items: state.listFurniture
+                              .map((e) => DropdownMenuItem<Furniture>(
+                                    value: e,
+                                    child: Text(e.nama),
+                                  ))
+                              .toList(),
+                          onChanged: _isLoading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _selectedFurniture = value;
+                                  });
+                                },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    RoomItem item = RoomItem(
-                      equipment: _selectedEquipment,
-                      furniture: _selectedFurniture,
-                      total: int.parse(_totalController.text.trim()),
-                      condition: _conditionController.text.trim(),
-                    );
+                  TextFormField(
+                    controller: _totalController,
+                    decoration: const InputDecoration(
+                      hintText: 'Total Item',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _conditionController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: 'Kondisi Item',
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      RoomItem item = RoomItem(
+                        equipment: _selectedEquipment,
+                        furniture: _selectedFurniture,
+                        total: int.parse(_totalController.text.trim()),
+                        condition: _conditionController.text.trim(),
+                      );
 
-                    // buat list baru untuk trigger agar biar state ke update
-                    _items.value = List.from(_items.value)..add(item);
+                      // buat list baru untuk trigger agar biar state ke update
+                      _items.value = List.from(_items.value)..add(item);
 
-                    _totalController.clear();
-                    _conditionController.clear();
+                      _totalController.clear();
+                      _conditionController.clear();
 
-                    Get.back();
-                  },
-                  child: const Text('Tambah Perabotan'),
-                ),
-              ],
+                      Get.back();
+                    },
+                    child: const Text('Tambah Perabotan'),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -195,7 +200,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     return BlocListener<RoomBloc, RoomState>(
       listener: _roomListener,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Room')),
+        appBar: AppBar(title: const Text('Tambah Ruangan')),
         body: Form(
           key: _form,
           child: ListView(
@@ -248,7 +253,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                 ),
-                child: const Text('Add Book'),
+                child: const Text('Tambah Perabotan'),
               ),
               const SizedBox(height: 20),
               ValueListenableBuilder<List<RoomItem>>(
