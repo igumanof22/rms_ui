@@ -4,7 +4,6 @@ import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
-import 'package:rms_ui/barrel/services.dart';
 
 class CreateEquipmentScreen extends StatefulWidget {
   final String? id;
