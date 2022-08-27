@@ -23,9 +23,9 @@ class App {
     BaseOptions options = BaseOptions(
       baseUrl: 'https://ikhsan.merapi.javan.id',
       headers: {
-        'name' : name,
-        'role' : role,
-        'email' : email
+        'Name' : name,
+        'Role' : role,
+        'Email' : email
       }
     );
 

@@ -6,8 +6,10 @@ export '../crud/room/screens/list_room_screen.dart';
 export '../crud/room/screens/create_room_screen.dart';
 export '../crud/room/screens/detail_room_screen.dart';
 export '../crud/users/screens/list_users_screen.dart';
+export '../crud/users/screens/signup_users_screen.dart';
 export '../crud/users/screens/create_users_screen.dart';
 export '../crud/users/screens/login_users_screen.dart';
+export '../crud/users/screens/profile_users_screen.dart';
 
 export '../requestroom/homepage_screen.dart';
 export '../requestroom/request/screens/list_requestroom_screen.dart';

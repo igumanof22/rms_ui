@@ -10,13 +10,41 @@ class UsersFetch extends UsersEvent {
   UsersFetch();
 }
 
+class UsersGet extends UsersEvent {
+  final String id;
+
+  UsersGet({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class UsersCreate extends UsersEvent {
   final Users users;
 
   UsersCreate({required this.users});
 
   @override
-  List<Object?> get props => [Users];
+  List<Object?> get props => [users];
+}
+
+class UsersProfile extends UsersEvent {
+  final String id;
+  final UsersProfileModel profileModel;
+
+  UsersProfile({required this.id, required this.profileModel});
+
+  @override
+  List<Object?> get props => [id, profileModel];
+}
+
+class UsersSignUp extends UsersEvent {
+  final UsersSignUpModel signUpModel;
+
+  UsersSignUp({required this.signUpModel});
+
+  @override
+  List<Object?> get props => [signUpModel];
 }
 
 class UsersLogin extends UsersEvent {

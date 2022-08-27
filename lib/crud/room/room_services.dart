@@ -8,14 +8,14 @@ class RoomService {
   static Future<List<Room>> fetch() async {
     Response response = await _dio.get('/crud/room');
 
-    return (response.data['data'] as List)
+    return (response.data['data']['content'] as List)
         .map((elm) => Room.fromMap(elm))
         .toList();
   }
 
   static Future<Room> get(String id) async {
     Response respone = await _dio.get('/crud/room/$id');
-    return Room.fromMap(respone);
+    return Room.fromMap(respone.data['data']);
   }
 
   static Future<void> create(Room room) async {

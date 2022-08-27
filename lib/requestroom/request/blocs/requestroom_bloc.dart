@@ -26,6 +26,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
       showSnackbar('Gagal ambil RequestRoom', isError: true);
 
       emit(RequestRoomError());
+      rethrow;
     }
   }
 

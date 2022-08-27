@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 
-class CreateUsersScreen extends StatefulWidget {
-  const CreateUsersScreen({Key? key}) : super(key: key);
+class SignUpUsersScreen extends StatefulWidget {
+  const SignUpUsersScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateUsersScreen> createState() => _CreateUsersScreenState();
+  State<SignUpUsersScreen> createState() => _SignUpUsersScreenState();
 }
 
-class _CreateUsersScreenState extends State<CreateUsersScreen> {
+class _SignUpUsersScreenState extends State<SignUpUsersScreen> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -40,14 +40,14 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
 
   void _submitAction() {
     if (_form.currentState!.validate()) {
-      Users users = Users(
+      UsersSignUpModel signUpModel = UsersSignUpModel(
         username: _userNameController.text.trim(),
         password: _passwordController.text.trim(),
         email: _emailController.text.trim(),
         name: _nameController.text.trim(),
       );
 
-      _usersBloc.add(UsersCreate(users: users));
+      _usersBloc.add(UsersSignUp(signUpModel: signUpModel));
     }
   }
 
@@ -70,7 +70,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
     return BlocListener<UsersBloc, UsersState>(
       listener: _usersListener,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Create Users')),
+        appBar: AppBar(title: const Text('Daftar Akun')),
         body: Form(
           key: _form,
           child: ListView(

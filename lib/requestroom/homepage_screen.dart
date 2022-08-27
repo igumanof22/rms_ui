@@ -92,50 +92,46 @@ class _HomePageScreenState extends State<HomePageScreen> {
             DrawerHeader(
               decoration: const BoxDecoration(color: Colors.black),
               padding: EdgeInsets.zero,
-              child: Image.network('https://picsum.photos/seed/picsum/800/800',
+              child: Image.network(pref.getString('logo')!.isEmpty ? 'https://picsum.photos/seed/picsum/800/800' : pref.getString('logo')!,
                   fit: BoxFit.fill),
-            ),
-            ListTile(
-              title: const Text('Home'),
-              onTap: () {
-                Get.off(const HomePageScreen());
-              },
             ),
             ListTile(
               title: const Text('Ruangan'),
               onTap: () {
-                Get.to(const HomeRoomScreen());
+                Get.to(() => const HomeRoomScreen());
               },
             ),
-            ListTile(
-              title: const Text('Furnitur'),
-              onTap: () {
-                Get.to(const HomeFurnitureScreen());
-              },
-            ),
-            if (role == null)
+            if (role == 'ART' && role == 'ADMIN')
+              ListTile(
+                title: const Text('Furnitur'),
+                onTap: () {
+                  Get.to(() => const HomeFurnitureScreen());
+                },
+              ),
+            if (role == 'ART' && role == 'ADMIN')
               ListTile(
                 title: const Text('Peralatan'),
                 onTap: () {
-                  Get.to(const HomeEquipmentScreen());
+                  Get.to(() => const HomeEquipmentScreen());
+                },
+              ),
+            if (role == 'ADMIN')
+              ListTile(
+                title: const Text('Akun'),
+                onTap: () {
+                  Get.to(() => const HomeUsersScreen());
                 },
               ),
             ListTile(
-              title: const Text('Akun'),
-              onTap: () {
-                Get.to(const HomeUsersScreen());
-              },
-            ),
-            ListTile(
               title: const Text('Request Peminjaman'),
               onTap: () {
-                Get.to(const CreateRequestRoomScreen());
+                Get.to(() => const CreateRequestRoomScreen());
               },
             ),
             ListTile(
               title: const Text('Profil'),
               onTap: () {
-                Get.to(const CreateUsersScreen());
+                Get.to(() => const ProfileUsersScreen());
               },
             ),
           ],

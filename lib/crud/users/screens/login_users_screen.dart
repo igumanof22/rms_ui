@@ -13,7 +13,7 @@ class LoginUsersScreen extends StatefulWidget {
 }
 
 class _LoginUsersScreenState extends State<LoginUsersScreen> {
-  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
@@ -28,7 +28,7 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
 
   @override
   void dispose() {
-    _userNameController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
 
     super.dispose();
@@ -37,13 +37,14 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
   void _loginAction() {
     if (_form.currentState!.validate()) {
       _usersBloc.add(UsersLogin(
-          username: _userNameController.text.trim(),
-          password: _passwordController.text.trim()));
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      ));
     }
   }
 
   void _signUpAction() {
-    Get.to(() => const CreateUsersScreen());
+    Get.to(() => const SignUpUsersScreen());
   }
 
   void _usersListener(BuildContext context, UsersState state) {
@@ -51,10 +52,10 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
       setState(() => _isLoading = true);
     }
 
-    if (state is UsersLoginSuccess || state is UsersError) {
+    if (state is UsersSuccess || state is UsersError) {
       setState(() => _isLoading = false);
 
-      if (state is UsersLoginSuccess) {
+      if (state is UsersSuccess) {
         Get.off(() => const HomePageScreen());
       }
     }
@@ -72,7 +73,7 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
               TextFormField(
-                controller: _userNameController,
+                controller: _usernameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
                   hintText: 'Username',
@@ -106,7 +107,10 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
                   const Text('Belum punya akun? '),
                   GestureDetector(
                     onTap: _signUpAction,
-                    child: const Text('Daftar', style: TextStyle(color: Colors.blue,)),
+                    child: const Text('Daftar',
+                        style: TextStyle(
+                          color: Colors.blue,
+                        )),
                   )
                 ],
               )

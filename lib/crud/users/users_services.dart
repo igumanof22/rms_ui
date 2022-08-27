@@ -1,22 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/services/app.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UsersService {
-  static final SharedPreferences pref = App.instance.pref;
   static final Dio _dio = App.instance.dio;
 
   static Future<List<Users>> fetch() async {
-    Response response = await _dio.get('/crud/users');
+    Response response = await _dio.get('/crud/user');
 
-    return (response.data['data'] as List)
+    return (response.data['data']['content'] as List)
         .map((elm) => Users.fromMap(elm))
         .toList();
   }
 
   static Future<void> create(Users users) async {
-    await _dio.post('/crud/users', data: {
+    await _dio.post('/crud/user', data: {
       'username': users.username,
       'password': users.password,
       'email': users.email,
@@ -24,8 +22,42 @@ class UsersService {
     });
   }
 
+  static Future<Users> get(String id) async {
+    Response respone = await _dio.get('/crud/user/$id');
+    return Users.fromMap(respone.data['data']);
+  }
+
+  static Future<void> profile(String id, UsersProfileModel profile) async {
+    var formData = FormData.fromMap({
+      'leader': profile.leader,
+      'leaderSignature': await MultipartFile.fromFile(
+          profile.leaderSignaturePath,
+          filename: profile.leaderSignatureName),
+      if (profile.logoName != null && profile.logoName!.isNotEmpty)
+        'logo': await MultipartFile.fromFile(profile.logoPath!,
+            filename: profile.logoName),
+      if (profile.secretarySignatureName != null &&
+          profile.secretarySignatureName!.isNotEmpty)
+        'secretarySignature': await MultipartFile.fromFile(
+            profile.secretarySignaturePath!,
+            filename: profile.secretarySignatureName),
+      if (profile.secretary != null && profile.secretary!.isNotEmpty)
+        'secretary': profile.secretary,
+    });
+    await _dio.post('/crud/user/profile/$id', data: formData);
+  }
+
+  static Future<void> signUp(UsersSignUpModel signUpModel) async {
+    await _dio.post('/common/signup', data: {
+      'username': signUpModel.username,
+      'password': signUpModel.password,
+      'email': signUpModel.email,
+      'name': signUpModel.name,
+    });
+  }
+
   static Future<UsersLoginModel> login(String username, String password) async {
-    Response response = await _dio.post('/crud/users/login', data: {
+    Response response = await _dio.post('/common/login', data: {
       'username': username,
       'password': password,
     });

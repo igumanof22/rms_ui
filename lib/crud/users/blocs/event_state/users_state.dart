@@ -12,9 +12,7 @@ class UsersLoading extends UsersState {}
 
 class UsersError extends UsersState {}
 
-class UsersCreateSuccess extends UsersState {}
-
-class UsersLoginSuccess extends UsersState {}
+class UsersSuccess extends UsersState {}
 
 class UsersInitialized extends UsersState {
   final List<Users> listUsers;
@@ -23,4 +21,13 @@ class UsersInitialized extends UsersState {
 
   @override
   List<Object?> get props => [listUsers];
+}
+
+class UsersGetData extends UsersState {
+  final Users users;
+
+  UsersGetData({required this.users});
+
+  @override
+  List<Object?> get props => [users];
 }

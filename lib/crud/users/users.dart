@@ -43,21 +43,63 @@ class Users {
 }
 
 class UsersLoginModel {
+  final String id;
   final String email;
   final String name;
   final String role;
+  final String? logo;
 
   UsersLoginModel({
+    required this.id,
     required this.email,
     required this.name,
     required this.role,
+    this.logo,
   });
 
   factory UsersLoginModel.fromMap(dynamic map) {
     return UsersLoginModel(
+      id: map['id'],
       email: map['email'],
       name: map['name'],
       role: map['role'],
+      logo: map['logo'],
     );
   }
+}
+
+class UsersSignUpModel {
+  final String username;
+  final String password;
+  final String email;
+  final String name;
+
+  UsersSignUpModel({
+    required this.username,
+    required this.password,
+    required this.email,
+    required this.name,
+  });
+}
+
+class UsersProfileModel {
+  final String? logoPath;
+  final String? logoName;
+  final String leaderSignaturePath;
+  final String leaderSignatureName;
+  final String? secretarySignaturePath;
+  final String? secretarySignatureName;
+  final String leader;
+  final String? secretary;
+
+  UsersProfileModel({
+    this.logoPath,
+    this.logoName,
+    required this.leaderSignaturePath,
+    required this.leaderSignatureName,
+    this.secretarySignaturePath,
+    this.secretarySignatureName,
+    required this.leader,
+    this.secretary,
+  });
 }

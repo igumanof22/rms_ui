@@ -8,7 +8,7 @@ class EquipmentService {
   static Future<List<Equipment>> fetch() async {
     Response response = await _dio.get('/crud/equipment');
 
-    return (response.data['data'] as List)
+    return (response.data['data']['content'] as List)
         .map((elm) => Equipment.fromMap(elm))
         .toList();
   }
@@ -21,7 +21,7 @@ class EquipmentService {
 
   static Future<Equipment> get(String id) async {
     Response respone = await _dio.get('/crud/equipment/$id');
-    return Equipment.fromMap(respone);
+    return Equipment.fromMap(respone.data['data']);
   }
 
   static Future<void> update(String id, Equipment equipment) async {

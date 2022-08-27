@@ -8,7 +8,7 @@ class FurnitureService {
   static Future<List<Furniture>> fetch() async {
     Response response = await _dio.get('/crud/furniture');
 
-    return (response.data['data'] as List)
+    return (response.data['data']['content'] as List)
         .map((elm) => Furniture.fromMap(elm))
         .toList();
   }
@@ -21,7 +21,7 @@ class FurnitureService {
 
   static Future<Furniture> get(String id) async {
     Response respone = await _dio.get('/crud/furniture/$id');
-    return Furniture.fromMap(respone);
+    return Furniture.fromMap(respone.data['data']);
   }
 
   static Future<void> update(String id, Furniture furniture) async {
