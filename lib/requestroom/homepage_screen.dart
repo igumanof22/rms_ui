@@ -90,17 +90,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
           padding: const EdgeInsets.symmetric(vertical: 2),
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/image/decor.jpg'))),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/image/decor.jpg'),
+                  fit: BoxFit.fill,
+                ),
+              ),
               padding: EdgeInsets.zero,
               child: Row(
                 children: [
                   ClipOval(
                     child: Image.network(
-                        pref.getString('logo')!.isEmpty
-                            ? 'https://picsum.photos/seed/picsum/800/800'
-                            : pref.getString('logo')!,
-                        fit: BoxFit.fill),
+                      pref.getString('logo')!.isEmpty
+                          ? 'https://picsum.photos/seed/picsum/800/800'
+                          : pref.getString('logo')!,
+                    ),
                   ),
+                  const SizedBox(width: 10),
                   Text(
                     pref.getString('name')!,
                     style: Theme.of(context).textTheme.headline5,
