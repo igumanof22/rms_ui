@@ -2,7 +2,6 @@ import '../../barrel/models.dart';
 
 class Room {
   final String? id;
-  final String nama;
   final String roomId;
   final String building;
   final String category;
@@ -11,7 +10,6 @@ class Room {
 
   Room({
     this.id,
-    required this.nama,
     required this.roomId,
     required this.building,
     required this.category,
@@ -22,24 +20,23 @@ class Room {
   factory Room.fromMap(dynamic map) {
     return Room(
       id: map['id'],
-      nama: map['name'],
       roomId: map['roomId'],
       building: map['building'],
       category: map['category'],
       totalCapacity: map['totalCapacity'],
-      roomItem:
-          (map['roomItem'] as List).map((e) => RoomItem.fromMap(e)).toList(),
+      roomItem: map['roomItems'] != null
+          ? (map['roomItems'] as List).map((e) => RoomItem.fromMap(e)).toList()
+          : [],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'name': nama,
       'roomId': roomId,
       'building': building,
       'category': category,
       'totalCapacity': totalCapacity,
-      'roomItem': roomItem.map((e) => e.toMap()),
+      'roomItems': roomItem.map((e) => e.toMap()).toList(),
     };
   }
 }

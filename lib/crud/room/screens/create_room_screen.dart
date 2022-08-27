@@ -4,16 +4,17 @@ import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
+import 'package:rms_ui/widgets/dialog_roomitem.dart';
 
 class CreateRoomScreen extends StatefulWidget {
-  const CreateRoomScreen({Key? key}) : super(key: key);
+  final Room? room;
+  const CreateRoomScreen({Key? key, this.room}) : super(key: key);
 
   @override
   State<CreateRoomScreen> createState() => _CreateRoomScreenState();
 }
 
 class _CreateRoomScreenState extends State<CreateRoomScreen> {
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _roomIdController = TextEditingController();
   final TextEditingController _buildingController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
@@ -24,27 +25,26 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   final GlobalKey<FormState> _form = GlobalKey();
   final ValueNotifier<List<RoomItem>> _items = ValueNotifier([]);
   late RoomBloc _roomBloc;
-  late EquipmentBloc _equipmentBloc;
-  late FurnitureBloc _furnitureBloc;
-  Equipment? _selectedEquipment;
-  Furniture? _selectedFurniture;
   bool _isLoading = false;
 
   @override
   void initState() {
     _roomBloc = BlocProvider.of(context);
-    _equipmentBloc = BlocProvider.of(context);
-    _furnitureBloc = BlocProvider.of(context);
 
-    _equipmentBloc.add(EquipmentFetch());
-    _furnitureBloc.add(FurnitureFetch());
+    if (widget.room != null) {
+      Room room = widget.room!;
+      _roomIdController.text = room.roomId;
+      _buildingController.text = room.building;
+      _categoryController.text = room.category;
+      _totalCapacityController.text = room.totalCapacity.toString();
+      _items.value = room.roomItem;
+    }
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
     _roomIdController.dispose();
     _buildingController.dispose();
     _categoryController.dispose();
@@ -61,124 +61,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       barrierDismissible: true,
       barrierLabel: 'add_item_dialog',
       pageBuilder: (context, a1, a2) {
-        return WillPopScope(
-          onWillPop: () {
-            return Future.value(true);
-          },
-          child: Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(13),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Pilih Peralatan'),
-                  BlocBuilder<EquipmentBloc, EquipmentState>(
-                    builder: (context, state) {
-                      if (state is EquipmentInitialized) {
-                        return DropdownButton<Equipment>(
-                          value: _selectedEquipment,
-                          items: state.listEquipment
-                              .map((e) => DropdownMenuItem<Equipment>(
-                                    value: e,
-                                    child: Text(e.nama),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            _selectedEquipment = value;
-                            setState(() {
-                              _selectedEquipment;
-                            });
-                          },
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  const Text('Pilih Perabotan'),
-                  BlocBuilder<FurnitureBloc, FurnitureState>(
-                    builder: (context, state) {
-                      if (state is FurnitureInitialized) {
-                        return DropdownButton<Furniture>(
-                          value: _selectedFurniture,
-                          items: state.listFurniture
-                              .map((e) => DropdownMenuItem<Furniture>(
-                                    value: e,
-                                    child: Text(e.nama),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            _selectedFurniture = value;
-                            setState(() {
-                              _selectedFurniture;
-                            });
-                          },
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  TextFormField(
-                    controller: _totalController,
-                    decoration: const InputDecoration(
-                      hintText: 'Total Item',
-                    ),
-                  ),
-                  TextFormField(
-                    controller: _conditionController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: 'Kondisi Item',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          RoomItem item = RoomItem(
-                            equipment: _selectedEquipment,
-                            furniture: null,
-                            total: int.parse(_totalController.text.trim()),
-                            condition: _conditionController.text.trim(),
-                          );
-
-                          // buat list baru untuk trigger agar biar state ke update
-                          _items.value = List.from(_items.value)..add(item);
-
-                          _totalController.clear();
-                          _conditionController.clear();
-
-                          Get.back();
-                        },
-                        child: const Text('Tambah Peralatan'),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          RoomItem item = RoomItem(
-                            equipment: null,
-                            furniture: _selectedFurniture,
-                            total: int.parse(_totalController.text.trim()),
-                            condition: _conditionController.text.trim(),
-                          );
-
-                          // buat list baru untuk trigger agar biar state ke update
-                          _items.value = List.from(_items.value)..add(item);
-
-                          _totalController.clear();
-                          _conditionController.clear();
-
-                          Get.back();
-                        },
-                        child: const Text('Tambah Perabotan'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+        return DialogBuilder(items: _items);
       },
       transitionBuilder: (context, a1, a2, child) {
         double curve = Curves.elasticInOut.transform(a1.value);
@@ -193,16 +76,26 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
 
   void _submitAction() {
     if (_form.currentState!.validate()) {
-      Room room = Room(
-        nama: _nameController.text.trim(),
-        roomId: _roomIdController.text.trim(),
-        building: _buildingController.text.trim(),
-        category: _categoryController.text.trim(),
-        totalCapacity: int.parse(_totalCapacityController.text.trim()),
-        roomItem: _items.value,
-      );
-
-      _roomBloc.add(RoomCreate(room: room));
+      if (widget.room == null) {
+        Room room = Room(
+          roomId: _roomIdController.text.trim(),
+          building: _buildingController.text.trim(),
+          category: _categoryController.text.trim(),
+          totalCapacity: int.parse(_totalCapacityController.text.trim()),
+          roomItem: _items.value,
+        );
+        _roomBloc.add(RoomCreate(room: room));
+      } else {
+        Room room = Room(
+          id: widget.room!.id,
+          roomId: _roomIdController.text.trim(),
+          building: _buildingController.text.trim(),
+          category: _categoryController.text.trim(),
+          totalCapacity: int.parse(_totalCapacityController.text.trim()),
+          roomItem: _items.value,
+        );
+        _roomBloc.add(RoomUpdate(room: room));
+      }
     }
   }
 
@@ -211,10 +104,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       setState(() => _isLoading = true);
     }
 
-    if (state is RoomCreateSuccess || state is RoomError) {
+    if (state is RoomSuccess || state is RoomError) {
       setState(() => _isLoading = false);
 
-      if (state is RoomCreateSuccess) {
+      if (state is RoomSuccess) {
         Get.back();
       }
     }
@@ -231,14 +124,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
-              TextFormField(
-                controller: _nameController,
-                validator: ValidationBuilder().required().build(),
-                decoration: const InputDecoration(
-                  hintText: 'Nama Room',
-                ),
-                readOnly: _isLoading,
-              ),
               TextFormField(
                 controller: _roomIdController,
                 validator: ValidationBuilder().required().build(),
@@ -278,14 +163,14 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                 ),
-                child: const Text('Tambah Perabotan'),
+                child: const Text('Tambah Item'),
               ),
               const SizedBox(height: 20),
               ValueListenableBuilder<List<RoomItem>>(
                 valueListenable: _items,
-                builder: (context, books, child) {
+                builder: (context, items, child) {
                   return Column(
-                    children: books
+                    children: items
                         .asMap()
                         .entries
                         .map((e) => Row(

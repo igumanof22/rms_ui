@@ -9,6 +9,7 @@ import 'package:rms_ui/widgets/widgets.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   RoomBloc() : super(RoomUninitialized()) {
     on(_onCreate);
+    on(_onUpdate);
     on(_onFetch);
     on(_onGet);
   }
@@ -54,13 +55,34 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       showSnackbar('Sukses tambah Room');
 
-      emit(RoomCreateSuccess());
+      emit(RoomSuccess());
 
       add(RoomFetch());
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onCreate');
 
       showSnackbar('Gagal tambah Room', isError: true);
+
+      emit(RoomError());
+      rethrow;
+    }
+  }
+
+  Future<void> _onUpdate(RoomUpdate event, Emitter<RoomState> emit) async {
+    try {
+      emit(RoomLoading());
+
+      await RoomService.update(event.room);
+
+      showSnackbar('Sukses ubah ruangan');
+
+      emit(RoomSuccess());
+
+      add(RoomFetch());
+    } catch (e) {
+      log(e.toString(), name: 'RoomBloc - _onUpdate');
+
+      showSnackbar('Gagal ubah ruangan', isError: true);
 
       emit(RoomError());
       rethrow;

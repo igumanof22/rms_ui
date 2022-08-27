@@ -27,3 +27,12 @@ class RoomCreate extends RoomEvent {
   @override
   List<Object?> get props => [room];
 }
+
+class RoomUpdate extends RoomEvent {
+  final Room room;
+
+  RoomUpdate({required this.room});
+
+  @override
+  List<Object?> get props => [room];
+}

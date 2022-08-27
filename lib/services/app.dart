@@ -28,7 +28,7 @@ class App {
     dio.interceptors.add(InterceptorsWrapper(
       onError: (e, handler) {
         log(e.requestOptions.uri.toString(), name: 'Dio Error');
-        log(e.response!.data.toString());
+        log(e.response?.data?.toString()??"");
 
         return handler.next(e);
       },

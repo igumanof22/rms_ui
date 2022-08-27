@@ -12,7 +12,7 @@ class RoomLoading extends RoomState {}
 
 class RoomError extends RoomState {}
 
-class RoomCreateSuccess extends RoomState {}
+class RoomSuccess extends RoomState {}
 
 class RoomInitialized extends RoomState {
   final List<Room> listRoom;

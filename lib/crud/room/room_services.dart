@@ -21,4 +21,8 @@ class RoomService {
   static Future<void> create(Room room) async {
     await _dio.post('/crud/room', data: room.toMap());
   }
+
+  static Future<void> update(Room room) async {
+    await _dio.post('/crud/room/${room.id}', data: room.toMap());
+  }
 }

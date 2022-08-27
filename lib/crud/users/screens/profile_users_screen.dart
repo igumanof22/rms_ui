@@ -143,7 +143,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
         body: Form(
           key: _form,
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.all(12),
             children: [
               TextFormField(
                 controller: _leaderController,
@@ -161,35 +161,55 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                 ),
                 readOnly: _isLoading,
               ),
+              const SizedBox(height: 13),
+              Text(
+                'Pilih Foto Logo',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               const SizedBox(height: 10),
-              const Text('Pilih Foto Logo'),
-              if (_logoName.isEmpty && _logoPath.isEmpty)
-                ElevatedButton(
-                  onPressed: _getLogo,
-                  child: const Text('Pilih'),
-                ),
-              if (_logoName.isNotEmpty && _logoPath.isNotEmpty) Text(_logoName),
+              _logoName.isEmpty && _logoPath.isEmpty
+                  ? Align(
+                      alignment: Alignment.topLeft,
+                      child: TextButton(
+                        onPressed: _getLogo,
+                        child: const Text('Pilih'),
+                      ),
+                    )
+                  : Text(_logoName,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+              const SizedBox(height: 15),
+              Text(
+                'Pilih Foto Tanda Tangan Ketua atau Pribadi',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               const SizedBox(height: 10),
-              const Text('Pilih Foto Tanda Tangan Ketua atau Pribadi'),
-              if (_leaderSignatureName.isEmpty && _leaderSignaturePath.isEmpty)
-                ElevatedButton(
-                  onPressed: _getLeaderSignature,
-                  child: const Text('Pilih'),
-                ),
-              if (_leaderSignatureName.isNotEmpty &&
-                  _leaderSignaturePath.isNotEmpty)
-                Text(_leaderSignatureName),
+              _leaderSignatureName.isEmpty && _leaderSignaturePath.isEmpty
+                  ? Align(
+                      alignment: Alignment.topLeft,
+                      child: TextButton(
+                        onPressed: _getLeaderSignature,
+                        child: const Text('Pilih'),
+                      ),
+                    )
+                  : Text(_leaderSignatureName,
+                style: Theme.of(context).textTheme.subtitle2,),
+              const SizedBox(height: 15),
+              Text(
+                'Pilih Foto Tanda Tangan Sekretaris',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               const SizedBox(height: 10),
-              const Text('Pilih Foto Tanda Tangan Sekretaris'),
-              if (_secretarySignatureName.isEmpty &&
-                  _secretarySignaturePath.isEmpty)
-                ElevatedButton(
-                  onPressed: _getSecretarySignature,
-                  child: const Text('Pilih'),
-                ),
-              if (_secretarySignatureName.isNotEmpty &&
-                  _secretarySignaturePath.isNotEmpty)
-                Text(_secretarySignatureName),
+              _secretarySignatureName.isEmpty && _secretarySignaturePath.isEmpty
+                  ? Align(
+                      alignment: Alignment.topLeft,
+                      child: TextButton(
+                        onPressed: _getSecretarySignature,
+                        child: const Text('Pilih'),
+                      ),
+                    )
+                  : Text(_secretarySignatureName,
+                style: Theme.of(context).textTheme.subtitle2,),
               const SizedBox(height: 50),
               _isLoading
                   ? Wrap(

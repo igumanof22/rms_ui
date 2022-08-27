@@ -32,6 +32,10 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
     Get.to(() => DetailRoomScreen(items: items, roomId: roomId,));
   }
 
+  void _toEditRoomAction(Room room) {
+    Get.to(() => CreateRoomScreen(room: room));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +74,6 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(room.nama),
                               Text(room.roomId),
                               Text(room.building),
                               Text(room.category),
@@ -82,7 +85,7 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () => _toEditRoomAction(room),
                                   child: const Text('Edit'),
                                 ),
                               ),
