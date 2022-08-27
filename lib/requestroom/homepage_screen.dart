@@ -101,14 +101,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 Get.to(() => const HomeRoomScreen());
               },
             ),
-            if (role == 'ART' && role == 'ADMIN')
+            if (role == 'ART' || role == 'ADMIN')
               ListTile(
                 title: const Text('Furnitur'),
                 onTap: () {
                   Get.to(() => const HomeFurnitureScreen());
                 },
               ),
-            if (role == 'ART' && role == 'ADMIN')
+            if (role == 'ART' || role == 'ADMIN')
               ListTile(
                 title: const Text('Peralatan'),
                 onTap: () {

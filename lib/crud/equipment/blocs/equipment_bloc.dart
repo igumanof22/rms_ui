@@ -59,6 +59,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses tambah peralatan');
 
       emit(EquipmentSuccess());
+      add(EquipmentFetch());
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onCreate');
 
@@ -78,6 +79,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses ubah peralatan');
 
       emit(EquipmentSuccess());
+      add(EquipmentFetch());
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 
@@ -97,6 +99,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses hapus peralatan');
 
       emit(EquipmentSuccess());
+      add(EquipmentFetch());
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 

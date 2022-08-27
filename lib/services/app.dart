@@ -21,13 +21,8 @@ class App {
     String? email = pref.getString('email');
 
     BaseOptions options = BaseOptions(
-      baseUrl: 'https://ikhsan.merapi.javan.id',
-      headers: {
-        'Name' : name,
-        'Role' : role,
-        'Email' : email
-      }
-    );
+        baseUrl: 'https://ikhsan.merapi.javan.id',
+        headers: {'Name': name, 'Role': role, 'Email': email});
 
     dio = Dio(options);
     dio.interceptors.add(InterceptorsWrapper(
@@ -38,6 +33,5 @@ class App {
         return handler.next(e);
       },
     ));
-
   }
 }

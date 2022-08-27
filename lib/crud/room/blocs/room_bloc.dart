@@ -63,6 +63,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       showSnackbar('Gagal tambah Room', isError: true);
 
       emit(RoomError());
+      rethrow;
     }
   }
 }

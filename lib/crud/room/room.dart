@@ -22,7 +22,7 @@ class Room {
   factory Room.fromMap(dynamic map) {
     return Room(
       id: map['id'],
-      nama: map['nama'],
+      nama: map['name'],
       roomId: map['roomId'],
       building: map['building'],
       category: map['category'],
@@ -34,7 +34,7 @@ class Room {
 
   Map<String, dynamic> toMap() {
     return {
-      'nama': nama,
+      'name': nama,
       'roomId': roomId,
       'building': building,
       'category': category,

@@ -10,7 +10,7 @@ class Equipment {
   factory Equipment.fromMap(dynamic map) {
     return Equipment(
       id: map['id'],
-      nama: map['nama'],
+      nama: map['name'],
     );
   }
 

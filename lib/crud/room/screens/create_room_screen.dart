@@ -67,10 +67,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
           },
           child: Dialog(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(13),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const Text('Pilih Peralatan'),
                   BlocBuilder<EquipmentBloc, EquipmentState>(
                     builder: (context, state) {
                       if (state is EquipmentInitialized) {
@@ -82,18 +83,18 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     child: Text(e.nama),
                                   ))
                               .toList(),
-                          onChanged: _isLoading
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _selectedEquipment = value;
-                                  });
-                                },
+                          onChanged: (value) {
+                            _selectedEquipment = value;
+                            setState(() {
+                              _selectedEquipment;
+                            });
+                          },
                         );
                       }
                       return const SizedBox.shrink();
                     },
                   ),
+                  const Text('Pilih Perabotan'),
                   BlocBuilder<FurnitureBloc, FurnitureState>(
                     builder: (context, state) {
                       if (state is FurnitureInitialized) {
@@ -105,13 +106,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     child: Text(e.nama),
                                   ))
                               .toList(),
-                          onChanged: _isLoading
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _selectedFurniture = value;
-                                  });
-                                },
+                          onChanged: (value) {
+                            _selectedFurniture = value;
+                            setState(() {
+                              _selectedFurniture;
+                            });
+                          },
                         );
                       }
                       return const SizedBox.shrink();
@@ -130,24 +130,49 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                       hintText: 'Kondisi Item',
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      RoomItem item = RoomItem(
-                        equipment: _selectedEquipment,
-                        furniture: _selectedFurniture,
-                        total: int.parse(_totalController.text.trim()),
-                        condition: _conditionController.text.trim(),
-                      );
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          RoomItem item = RoomItem(
+                            equipment: _selectedEquipment,
+                            furniture: null,
+                            total: int.parse(_totalController.text.trim()),
+                            condition: _conditionController.text.trim(),
+                          );
 
-                      // buat list baru untuk trigger agar biar state ke update
-                      _items.value = List.from(_items.value)..add(item);
+                          // buat list baru untuk trigger agar biar state ke update
+                          _items.value = List.from(_items.value)..add(item);
 
-                      _totalController.clear();
-                      _conditionController.clear();
+                          _totalController.clear();
+                          _conditionController.clear();
 
-                      Get.back();
-                    },
-                    child: const Text('Tambah Perabotan'),
+                          Get.back();
+                        },
+                        child: const Text('Tambah Peralatan'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          RoomItem item = RoomItem(
+                            equipment: null,
+                            furniture: _selectedFurniture,
+                            total: int.parse(_totalController.text.trim()),
+                            condition: _conditionController.text.trim(),
+                          );
+
+                          // buat list baru untuk trigger agar biar state ke update
+                          _items.value = List.from(_items.value)..add(item);
+
+                          _totalController.clear();
+                          _conditionController.clear();
+
+                          Get.back();
+                        },
+                        child: const Text('Tambah Perabotan'),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -15,7 +15,7 @@ class EquipmentService {
 
   static Future<void> create(Equipment equipment) async {
     await _dio.post('/crud/equipment', data: {
-      'nama': equipment.nama,
+      'name': equipment.nama,
     });
   }
 
@@ -26,7 +26,7 @@ class EquipmentService {
 
   static Future<void> update(String id, Equipment equipment) async {
     await _dio.post('/crud/equipment/$id', data: {
-      'nama': equipment.nama,
+      'name': equipment.nama,
     });
   }
 

@@ -10,7 +10,7 @@ class Furniture {
   factory Furniture.fromMap(dynamic map) {
     return Furniture(
       id: map['id'],
-      nama: map['nama'],
+      nama: map['name'],
     );
   }
 

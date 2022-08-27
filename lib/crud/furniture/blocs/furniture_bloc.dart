@@ -29,6 +29,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Gagal ambil Furniture', isError: true);
 
       emit(FurnitureError());
+      rethrow;
     }
   }
 
@@ -45,6 +46,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Gagal ambil Furniture', isError: true);
 
       emit(FurnitureError());
+      rethrow;
     }
   }
 
@@ -58,12 +60,14 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses tambah Furnitur');
 
       emit(FurnitureSuccess());
+      add(FurnitureFetch());
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onCreate');
 
       showSnackbar('Gagal tambah Furnitur', isError: true);
 
       emit(FurnitureError());
+      rethrow;
     }
   }
 
@@ -77,12 +81,14 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses ubah Furnitur');
 
       emit(FurnitureSuccess());
+      add(FurnitureFetch());
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onUpdate');
 
       showSnackbar('Gagal ubah Furnitur', isError: true);
 
       emit(FurnitureError());
+      rethrow;
     }
   }
 
@@ -98,12 +104,14 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       emit(FurnitureSuccess());
 
       add(FurnitureFetch());
+      add(FurnitureFetch());
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onDelete');
 
       showSnackbar('Gagal hapus Furnitur', isError: true);
 
       emit(FurnitureError());
+      rethrow;
     }
   }
 }
