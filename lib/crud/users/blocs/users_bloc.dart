@@ -73,7 +73,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     try {
       emit(UsersLoading());
 
-      await UsersService.profile(event.id, event.profileModel);
+    await UsersService.profile(event.id, event.profileModel);
 
       showSnackbar('Sukses Ubah Profil User');
 
