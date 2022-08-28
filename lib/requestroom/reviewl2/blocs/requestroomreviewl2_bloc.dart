@@ -6,47 +6,60 @@ import 'package:rms_ui/barrel/services.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
-class RequestRoomReviewL2Bloc extends Bloc<RequestRoomReviewL2Event, RequestRoomReviewL2State> {
+class RequestRoomReviewL2Bloc
+    extends Bloc<RequestRoomReviewL2Event, RequestRoomReviewL2State> {
   RequestRoomReviewL2Bloc() : super(RequestRoomReviewL2Uninitialized()) {
-    on(_onCreate);
+    on(_onSubmit);
     on(_onFetch);
   }
 
-  Future<void> _onFetch(
-      RequestRoomReviewL2Fetch event, Emitter<RequestRoomReviewL2State> emit) async {
+  Future<void> _onFetch(RequestRoomReviewL2Fetch event,
+      Emitter<RequestRoomReviewL2State> emit) async {
     try {
       emit(RequestRoomReviewL2Loading());
 
-      List<RequestRoom> listRequestRoom = await RequestRoomReviewL2Service.fetch();
+      List<RequestRoom> listRequestRoom =
+          await RequestRoomReviewL2Service.fetch();
 
       emit(RequestRoomReviewL2Initialized(listRequestRoom: listRequestRoom));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomReviewL2Bloc - _onFetch');
 
-      showSnackbar('Gagal ambil RequestRoomReviewL2', isError: true);
+      showSnackbar('Gagal ambil data Request', isError: true);
 
       emit(RequestRoomReviewL2Error());
     }
   }
 
-  Future<void> _onCreate(
-      RequestRoomReviewL2Create event, Emitter<RequestRoomReviewL2State> emit) async {
+  Future<void> _onSubmit(RequestRoomReviewL2Submit event,
+      Emitter<RequestRoomReviewL2State> emit) async {
     try {
       emit(RequestRoomReviewL2Loading());
 
-      await RequestRoomReviewL2Service.create(event.requestRoom);
+      await RequestRoomReviewL2Service.submit(
+          event.id, event.decision, event.reason);
 
-      showSnackbar('Sukses tambah RequestRoomReviewL2');
+      if (event.decision == true) {
+        showSnackbar('Sukses Menyetujui Request ${event.requestId}');
+      } else {
+        showSnackbar('Sukses Menolak Request ${event.requestId}');
+      }
 
-      emit(RequestRoomReviewL2CreateSuccess());
+      emit(RequestRoomReviewL2Success());
 
       add(RequestRoomReviewL2Fetch());
     } catch (e) {
       log(e.toString(), name: 'RequestRoomReviewL2Bloc - _onCreate');
 
-      showSnackbar('Gagal tambah RequestRoomReviewL2', isError: true);
+      if (event.decision == true) {
+        showSnackbar('Gagal Menyetujui Request ${event.requestId}',
+            isError: true);
+      } else {
+        showSnackbar('Gagal Menolak Request ${event.requestId}', isError: true);
+      }
 
       emit(RequestRoomReviewL2Error());
+      rethrow;
     }
   }
 }

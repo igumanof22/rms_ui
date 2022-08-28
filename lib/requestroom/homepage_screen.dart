@@ -5,6 +5,7 @@ import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
 import 'package:rms_ui/barrel/services.dart';
+import 'package:rms_ui/widgets/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -85,82 +86,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
           );
         },
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/image/decor.jpg'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              padding: EdgeInsets.zero,
-              child: Row(
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      pref.getString('logo')!.isEmpty
-                          ? 'https://picsum.photos/seed/picsum/800/800'
-                          : pref.getString('logo')!,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    pref.getString('name')!,
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              title: const Text('Ruangan'),
-              onTap: () {
-                Get.to(() => const HomeRoomScreen());
-              },
-            ),
-            if (role == 'ART' || role == 'ADMIN')
-              ListTile(
-                title: const Text('Furnitur'),
-                onTap: () {
-                  Get.to(() => const HomeFurnitureScreen());
-                },
-              ),
-            if (role == 'ART' || role == 'ADMIN')
-              ListTile(
-                title: const Text('Peralatan'),
-                onTap: () {
-                  Get.to(() => const HomeEquipmentScreen());
-                },
-              ),
-            if (role == 'ADMIN')
-              ListTile(
-                title: const Text('Akun'),
-                onTap: () {
-                  Get.to(() => const HomeUsersScreen());
-                },
-              ),
-            ListTile(
-              title: const Text('Request Peminjaman'),
-              onTap: () {
-                Get.to(() => const CreateRequestRoomScreen());
-              },
-            ),
-            ListTile(
-              title: const Text('Profil'),
-              onTap: () {
-                Get.to(() => const ProfileUsersScreen());
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toCreateRequestAction,
-        mini: true,
-        child: const Icon(Icons.add, size: 17),
-      ),
+      drawer: const DrawerMenu(),
+      floatingActionButton: role != 'ADMIN' && role != 'ART'
+          ? FloatingActionButton(
+              onPressed: _toCreateRequestAction,
+              mini: true,
+              child: const Icon(Icons.add, size: 17),
+            )
+          : const Text(''),
     );
   }
 }

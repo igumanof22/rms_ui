@@ -39,4 +39,10 @@ class Room {
       'roomItems': roomItem.map((e) => e.toMap()).toList(),
     };
   }
+
+  Map<String, dynamic> toMapRequest() {
+    return {
+      'id': id,
+    };
+  }
 }

@@ -1,4 +1,5 @@
 export '../services/app.dart';
+export '../crud/activitylevel/activitylevel_services.dart';
 export '../crud/equipment/equipment_services.dart';
 export '../crud/furniture/furniture_services.dart';
 export '../crud/room/room_services.dart';

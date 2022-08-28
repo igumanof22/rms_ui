@@ -4,7 +4,7 @@ import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
-import 'package:rms_ui/widgets/dialog_roomitem.dart';
+import 'package:rms_ui/widgets/widgets.dart';
 
 class CreateRoomScreen extends StatefulWidget {
   final Room? room;

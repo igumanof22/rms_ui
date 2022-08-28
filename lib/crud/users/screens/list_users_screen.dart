@@ -31,7 +31,7 @@ class _HomeUsersScreenState extends State<HomeUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Crud')),
+      appBar: AppBar(title: const Text('Daftar Akun')),
       body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
           if (state is UsersInitialized) {
@@ -64,7 +64,10 @@ class _HomeUsersScreenState extends State<HomeUsersScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(users.name),
+                            Text(
+                              users.name!,
+                              style: Theme.of(context).textTheme.subtitle1,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 10),

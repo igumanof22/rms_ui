@@ -1,9 +1,9 @@
 class Users {
   final String? id;
-  final String username;
-  final String password;
-  final String email;
-  final String name;
+  final String? username;
+  final String? password;
+  final String? email;
+  final String? name;
   final String? role;
   final String? logoPath;
   final String? leader;
@@ -13,10 +13,10 @@ class Users {
 
   Users({
     this.id,
-    required this.username,
-    required this.password,
-    required this.email,
-    required this.name,
+    this.username,
+    this.password,
+    this.email,
+    this.name,
     this.role,
     this.logoPath,
     this.leader,
@@ -39,6 +39,12 @@ class Users {
       secretary: map['secretary'],
       secretarySignature: map['secretarySignature'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+    };
   }
 }
 
@@ -85,21 +91,21 @@ class UsersSignUpModel {
 class UsersProfileModel {
   final String? logoPath;
   final String? logoName;
-  final String leaderSignaturePath;
-  final String leaderSignatureName;
+  final String? leaderSignaturePath;
+  final String? leaderSignatureName;
   final String? secretarySignaturePath;
   final String? secretarySignatureName;
-  final String leader;
+  final String? leader;
   final String? secretary;
 
   UsersProfileModel({
     this.logoPath,
     this.logoName,
-    required this.leaderSignaturePath,
-    required this.leaderSignatureName,
+    this.leaderSignaturePath,
+    this.leaderSignatureName,
     this.secretarySignaturePath,
     this.secretarySignatureName,
-    required this.leader,
+    this.leader,
     this.secretary,
   });
 }

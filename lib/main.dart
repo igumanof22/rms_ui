@@ -21,10 +21,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => UsersBloc()),
-        BlocProvider(create: (_) => RequestRoomBloc()),
         BlocProvider(create: (_) => FurnitureBloc()),
         BlocProvider(create: (_) => EquipmentBloc()),
         BlocProvider(create: (_) => RoomBloc()),
+        BlocProvider(create: (_) => ActivityLevelBloc()),
+        BlocProvider(create: (_) => RequestRoomBloc()),
+        BlocProvider(create: (_) => RequestRoomModifyBloc()),
+        BlocProvider(create: (_) => RequestRoomReviewL1Bloc()),
+        BlocProvider(create: (_) => RequestRoomReviewL2Bloc()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

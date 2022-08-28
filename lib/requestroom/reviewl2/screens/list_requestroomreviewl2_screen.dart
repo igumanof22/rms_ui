@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
-import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/widgets/widgets.dart';
 
 class HomeRequestRoomReviewL2Screen extends StatefulWidget {
   const HomeRequestRoomReviewL2Screen({Key? key}) : super(key: key);
@@ -26,14 +25,10 @@ class _HomeRequestRoomReviewL2ScreenState
     super.initState();
   }
 
-  void _toCreateRequestRoomReviewL2Action() {
-    Get.to(() => const CreateRequestRoomReviewL2Screen());
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Request Room')),
+      appBar: AppBar(title: const Text('Review Request')),
       body: BlocBuilder<RequestRoomReviewL2Bloc, RequestRoomReviewL2State>(
         builder: (context, state) {
           if (state is RequestRoomReviewL2Initialized) {
@@ -97,17 +92,12 @@ class _HomeRequestRoomReviewL2ScreenState
               },
             );
           }
-
           return const Center(
             child: CircularProgressIndicator(),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toCreateRequestRoomReviewL2Action,
-        mini: true,
-        child: const Icon(Icons.add, size: 17),
-      ),
+      drawer: const DrawerMenu(),
     );
   }
 }

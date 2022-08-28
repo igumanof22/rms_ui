@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:rms_ui/barrel/models.dart';
 
 abstract class RequestRoomReviewL1Event extends Equatable {
   @override
@@ -10,11 +9,15 @@ class RequestRoomReviewL1Fetch extends RequestRoomReviewL1Event {
   RequestRoomReviewL1Fetch();
 }
 
-class RequestRoomReviewL1Create extends RequestRoomReviewL1Event {
-  final RequestRoom requestRoom;
+class RequestRoomReviewL1Submit extends RequestRoomReviewL1Event {
+  final String id;
+  final String requestId;
+  final bool decision;
+  final String? reason;
 
-  RequestRoomReviewL1Create({required this.requestRoom});
+  RequestRoomReviewL1Submit(
+      {required this.id, required this.requestId, required this.decision, this.reason});
 
   @override
-  List<Object?> get props => [RequestRoom];
+  List<Object?> get props => [id, requestId, decision, reason];
 }

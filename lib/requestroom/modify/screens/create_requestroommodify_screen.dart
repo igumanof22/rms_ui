@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
+import 'package:rms_ui/barrel/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateRequestRoomModifyScreen extends StatefulWidget {
   const CreateRequestRoomModifyScreen({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class CreateRequestRoomModifyScreen extends StatefulWidget {
 
 class _CreateRequestRoomModifyScreenState
     extends State<CreateRequestRoomModifyScreen> {
+  final SharedPreferences pref = App.instance.pref;
+
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
@@ -23,16 +27,25 @@ class _CreateRequestRoomModifyScreenState
   final TextEditingController _activityNameController = TextEditingController();
   final TextEditingController _activityLevelController =
       TextEditingController();
-  final TextEditingController _roomController = TextEditingController();
+  final TextEditingController _participantController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
   late RequestRoomModifyBloc _requestRoomBloc;
+  late RoomBloc _roomBloc;
+  late ActivityLevelBloc _activityLevelBloc;
   bool _isLoading = false;
   DateTime? _startDate;
   DateTime? _endDate;
+  Room? _selectedRoom;
+  ActivityLevel? _selectedActivityLevel;
 
   @override
   void initState() {
     _requestRoomBloc = BlocProvider.of(context);
+    _roomBloc = BlocProvider.of(context);
+    _activityLevelBloc = BlocProvider.of(context);
+
+    _roomBloc.add(RoomFetch());
+    _activityLevelBloc.add(ActivityLevelFetch());
 
     super.initState();
   }
@@ -45,20 +58,24 @@ class _CreateRequestRoomModifyScreenState
     _endTimeController.dispose();
     _activityNameController.dispose();
     _activityLevelController.dispose();
-    _roomController.dispose();
+    _participantController.dispose();
 
     super.dispose();
   }
 
   void _submitAction() {
     if (_form.currentState!.validate()) {
+      Users user = Users(id: pref.getString('id')!);
       RequestRoom requestRoom = RequestRoom(
         startDate: _startDate!,
         endDate: _endDate!,
         startTime: _startTimeController.text.trim(),
         endTime: _endTimeController.text.trim(),
         activityName: _activityNameController.text.trim(),
-        activityLevel: _activityLevelController.text.trim(),
+        activityLevel: _selectedActivityLevel!,
+        participant: int.parse(_participantController.text.trim()),
+        room: _selectedRoom!,
+        user: user,
       );
 
       _requestRoomBloc.add(RequestRoomModifyCreate(requestRoom: requestRoom));
@@ -122,6 +139,28 @@ class _CreateRequestRoomModifyScreenState
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
+              BlocBuilder<RoomBloc, RoomState>(
+                builder: (context, state) {
+                  if (state is RoomInitialized) {
+                    return DropdownButton<Room>(
+                      isExpanded: true,
+                      value: _selectedRoom,
+                      items: state.listRoom
+                          .map((e) => DropdownMenuItem<Room>(
+                                value: e,
+                                child: Text(e.roomId),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedRoom = value!;
+                        });
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               TextFormField(
                 controller: _activityNameController,
                 validator: ValidationBuilder().required().build(),
@@ -130,13 +169,27 @@ class _CreateRequestRoomModifyScreenState
                 ),
                 readOnly: _isLoading,
               ),
-              TextFormField(
-                controller: _activityLevelController,
-                validator: ValidationBuilder().required().build(),
-                decoration: const InputDecoration(
-                  hintText: 'Tingkat Acara (Internal, Jurusan, dll)',
-                ),
-                readOnly: _isLoading,
+              BlocBuilder<ActivityLevelBloc, ActivityLevelState>(
+                builder: (context, state) {
+                  if (state is ActivityLevelInitialized) {
+                    return DropdownButton<ActivityLevel>(
+                      isExpanded: true,
+                      value: _selectedActivityLevel,
+                      items: state.listActivityLevel
+                          .map((e) => DropdownMenuItem<ActivityLevel>(
+                                value: e,
+                                child: Text(e.nama),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedActivityLevel = value!;
+                        });
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               TextFormField(
                 controller: _startDateController,

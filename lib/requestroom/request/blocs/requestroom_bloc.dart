@@ -8,7 +8,8 @@ import 'package:rms_ui/widgets/widgets.dart';
 
 class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
   RequestRoomBloc() : super(RequestRoomUninitialized()) {
-    on(_onCreate);
+    on(_onSubmit);
+    on(_onDraft);
     on(_onFetch);
   }
 
@@ -30,24 +31,47 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     }
   }
 
-  Future<void> _onCreate(
+  Future<void> _onSubmit(
       RequestRoomCreate event, Emitter<RequestRoomState> emit) async {
     try {
       emit(RequestRoomLoading());
 
       await RequestRoomService.create(event.requestRoom);
 
-      showSnackbar('Sukses tambah RequestRoom');
+      showSnackbar('Sukses Mengajukan Request');
 
-      emit(RequestRoomCreateSuccess());
+      emit(RequestRoomSuccess());
 
       add(RequestRoomFetch());
     } catch (e) {
-      log(e.toString(), name: 'RequestRoomBloc - _onCreate');
+      log(e.toString(), name: 'RequestRoomBloc - _onSubmit');
 
-      showSnackbar('Gagal tambah RequestRoom', isError: true);
+      showSnackbar('Gagal Mengajukan Request', isError: true);
 
       emit(RequestRoomError());
+      rethrow;
+    }
+  }
+
+  Future<void> _onDraft(
+      RequestRoomDraft event, Emitter<RequestRoomState> emit) async {
+    try {
+      emit(RequestRoomLoading());
+
+      await RequestRoomService.draft(event.requestRoomDraft);
+
+      showSnackbar('Sukses Menyimpan Request');
+
+      emit(RequestRoomSuccess());
+
+      add(RequestRoomFetch());
+    } catch (e) {
+      log(e.toString(), name: 'RequestRoomBloc - _onDraft');
+
+      showSnackbar('Gagal Menyimpan Request', isError: true);
+
+      emit(RequestRoomError());
+      rethrow;
     }
   }
 }

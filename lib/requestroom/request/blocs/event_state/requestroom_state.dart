@@ -12,7 +12,7 @@ class RequestRoomLoading extends RequestRoomState {}
 
 class RequestRoomError extends RequestRoomState {}
 
-class RequestRoomCreateSuccess extends RequestRoomState {}
+class RequestRoomSuccess extends RequestRoomState {}
 
 class RequestRoomInitialized extends RequestRoomState {
   final List<RequestRoom> listRequestRoom;

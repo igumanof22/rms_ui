@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
-import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/widgets/widgets.dart';
 
 class HomeRequestRoomReviewL1Screen extends StatefulWidget {
   const HomeRequestRoomReviewL1Screen({Key? key}) : super(key: key);
@@ -15,25 +14,21 @@ class HomeRequestRoomReviewL1Screen extends StatefulWidget {
 
 class _HomeRequestRoomReviewL1ScreenState
     extends State<HomeRequestRoomReviewL1Screen> {
-  late RequestRoomReviewL1Bloc _requestRoomBloc;
+  late RequestRoomReviewL1Bloc _requestRoomReviewL1Bloc;
 
   @override
   void initState() {
-    _requestRoomBloc = BlocProvider.of(context);
+    _requestRoomReviewL1Bloc = BlocProvider.of(context);
 
-    _requestRoomBloc.add(RequestRoomReviewL1Fetch());
+    _requestRoomReviewL1Bloc.add(RequestRoomReviewL1Fetch());
 
     super.initState();
-  }
-
-  void _toCreateRequestRoomReviewL1Action() {
-    Get.to(() => const CreateRequestRoomReviewL1Screen());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Request Room')),
+      appBar: AppBar(title: const Text('Review Request')),
       body: BlocBuilder<RequestRoomReviewL1Bloc, RequestRoomReviewL1State>(
         builder: (context, state) {
           if (state is RequestRoomReviewL1Initialized) {
@@ -103,11 +98,7 @@ class _HomeRequestRoomReviewL1ScreenState
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toCreateRequestRoomReviewL1Action,
-        mini: true,
-        child: const Icon(Icons.add, size: 17),
-      ),
+      drawer: const DrawerMenu(),
     );
   }
 }

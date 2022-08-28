@@ -21,6 +21,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
   final TextEditingController _secretaryController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
+  late String? _role;
   bool _isLoading = false;
   String _logoPath = "";
   String _logoName = "";
@@ -33,6 +34,8 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
   void initState() {
     _usersBloc = BlocProvider.of(context);
     _usersBloc.add(UsersGet(id: pref.getString('id')!));
+
+    _role = pref.getString('role');
 
     super.initState();
   }
@@ -77,6 +80,9 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
     }
     if (state is UsersGetData) {
       setState(() => _isLoading = false);
+      Users user = state.users;
+      _leaderController.text = user.leader ?? '';
+      _secretaryController.text = user.leader ?? '';
     }
   }
 
@@ -153,38 +159,44 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                 ),
                 readOnly: _isLoading,
               ),
-              TextFormField(
-                controller: _secretaryController,
-                validator: ValidationBuilder().required().build(),
-                decoration: const InputDecoration(
-                  hintText: 'Nama Sekretaris UKM',
+              if (_role == 'MHS' || _role == 'STAFF')
+                TextFormField(
+                  controller: _secretaryController,
+                  validator: ValidationBuilder().required().build(),
+                  decoration: const InputDecoration(
+                    hintText: 'Nama Sekretaris UKM',
+                  ),
+                  readOnly: _isLoading,
                 ),
-                readOnly: _isLoading,
-              ),
-              const SizedBox(height: 13),
-              Text(
-                'Pilih Foto Logo',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              const SizedBox(height: 10),
-              _logoName.isEmpty && _logoPath.isEmpty
-                  ? Align(
-                      alignment: Alignment.topLeft,
-                      child: TextButton(
-                        onPressed: _getLogo,
-                        child: const Text('Pilih'),
+              if (_role == 'MHS' || _role == 'STAFF')
+                const SizedBox(height: 13),
+              if (_role == 'MHS' || _role == 'STAFF')
+                Text(
+                  'Pilih Foto Logo',
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              if (_role == 'MHS' || _role == 'STAFF')
+                const SizedBox(height: 10),
+              if (_role == 'MHS' || _role == 'STAFF')
+                _logoPath.isEmpty
+                    ? Align(
+                        alignment: Alignment.topLeft,
+                        child: TextButton(
+                          onPressed: _getLogo,
+                          child: const Text('Pilih'),
+                        ),
+                      )
+                    : Text(
+                        _logoName,
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                    )
-                  : Text(_logoName,
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
               const SizedBox(height: 15),
               Text(
                 'Pilih Foto Tanda Tangan Ketua atau Pribadi',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               const SizedBox(height: 10),
-              _leaderSignatureName.isEmpty && _leaderSignaturePath.isEmpty
+              _leaderSignaturePath.isEmpty
                   ? Align(
                       alignment: Alignment.topLeft,
                       child: TextButton(
@@ -192,24 +204,32 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                         child: const Text('Pilih'),
                       ),
                     )
-                  : Text(_leaderSignatureName,
-                style: Theme.of(context).textTheme.subtitle2,),
-              const SizedBox(height: 15),
-              Text(
-                'Pilih Foto Tanda Tangan Sekretaris',
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              const SizedBox(height: 10),
-              _secretarySignatureName.isEmpty && _secretarySignaturePath.isEmpty
-                  ? Align(
-                      alignment: Alignment.topLeft,
-                      child: TextButton(
-                        onPressed: _getSecretarySignature,
-                        child: const Text('Pilih'),
+                  : Text(
+                      _leaderSignatureName,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+              if (_role == 'MHS' || _role == 'STAFF')
+                const SizedBox(height: 15),
+              if (_role == 'MHS' || _role == 'STAFF')
+                Text(
+                  'Pilih Foto Tanda Tangan Sekretaris',
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              if (_role == 'MHS' || _role == 'STAFF')
+                const SizedBox(height: 10),
+              if (_role == 'MHS' || _role == 'STAFF')
+                _secretarySignaturePath.isEmpty
+                    ? Align(
+                        alignment: Alignment.topLeft,
+                        child: TextButton(
+                          onPressed: _getSecretarySignature,
+                          child: const Text('Pilih'),
+                        ),
+                      )
+                    : Text(
+                        _secretarySignatureName,
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
-                    )
-                  : Text(_secretarySignatureName,
-                style: Theme.of(context).textTheme.subtitle2,),
               const SizedBox(height: 50),
               _isLoading
                   ? Wrap(

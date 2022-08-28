@@ -17,9 +17,11 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final List<String> _role = ['ART', 'ADMINISTRASI', 'KASUBAG'];
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
   bool _isLoading = false;
+  String? _selectedRole;
 
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
         password: _passwordController.text.trim(),
         email: _emailController.text.trim(),
         name: _nameController.text.trim(),
+        role: _selectedRole,
       );
 
       _usersBloc.add(UsersCreate(users: users));
@@ -108,6 +111,22 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                   hintText: 'Nama',
                 ),
                 readOnly: _isLoading,
+              ),
+              DropdownButtonFormField<String>(
+                value: _selectedRole,
+                hint: const Text('Pilih Role'),
+                validator: ValidationBuilder().required().build(),
+                items: _role
+                    .map((e) => DropdownMenuItem<String>(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRole = value;
+                  });
+                },
               ),
               const SizedBox(height: 50),
               _isLoading

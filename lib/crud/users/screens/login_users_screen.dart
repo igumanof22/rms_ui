@@ -4,6 +4,8 @@ import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/barrel/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginUsersScreen extends StatefulWidget {
   const LoginUsersScreen({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class LoginUsersScreen extends StatefulWidget {
 }
 
 class _LoginUsersScreenState extends State<LoginUsersScreen> {
+  final SharedPreferences pref = App.instance.pref;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _form = GlobalKey();
@@ -56,7 +59,14 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
       setState(() => _isLoading = false);
 
       if (state is UsersSuccess) {
-        Get.off(() => const HomePageScreen());
+        String role = pref.getString('role')!;
+        if (role.toLowerCase() == 'administrasi'){
+          Get.off(() => const HomeRequestRoomReviewL1Screen());
+        } else if(role.toLowerCase() == 'kasubag') {
+          Get.off(() => const HomeRequestRoomReviewL2Screen());
+        } else {
+          Get.off(() => const HomePageScreen());
+        }
       }
     }
   }

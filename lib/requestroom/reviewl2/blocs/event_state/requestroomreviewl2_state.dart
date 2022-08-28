@@ -12,7 +12,7 @@ class RequestRoomReviewL2Loading extends RequestRoomReviewL2State {}
 
 class RequestRoomReviewL2Error extends RequestRoomReviewL2State {}
 
-class RequestRoomReviewL2CreateSuccess extends RequestRoomReviewL2State {}
+class RequestRoomReviewL2Success extends RequestRoomReviewL2State {}
 
 class RequestRoomReviewL2Initialized extends RequestRoomReviewL2State {
   final List<RequestRoom> listRequestRoom;

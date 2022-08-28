@@ -14,13 +14,32 @@ class RequestRoomService {
   }
 
   static Future<void> create(RequestRoom requestRoom) async {
-    await _dio.post('/bpmn/RequestRoom', data: {
+    await _dio
+        .post('/bpmn/RequestRoom?withVariable=true&decision=submit', data: {
       'startDate': requestRoom.startDate,
       'endDate': requestRoom.endDate,
       'startTime': requestRoom.startTime,
       'endTime': requestRoom.endTime,
       'activityName': requestRoom.activityName,
-      'activityLevel': requestRoom.activityLevel,
+      'activityLevel': requestRoom.activityLevel.toMap(),
+      'participant': requestRoom.participant,
+      'user': requestRoom.user.toMap(),
+      'room': requestRoom.room.toMapRequest(),
+    });
+  }
+
+  static Future<void> draft(RequestRoomDrafts requestRoom) async {
+    await _dio
+        .post('/bpmn/RequestRoom?withVariable=true&decision=draft', data: {
+      'startDate': requestRoom.startDate,
+      'endDate': requestRoom.endDate,
+      'startTime': requestRoom.startTime,
+      'endTime': requestRoom.endTime,
+      'activityName': requestRoom.activityName,
+      'activityLevel': requestRoom.activityLevel?.toMap(),
+      'participant': requestRoom.participant,
+      'user': requestRoom.user?.toMap(),
+      'room': requestRoom.room?.toMapRequest(),
     });
   }
 }

@@ -16,5 +16,14 @@ class RequestRoomCreate extends RequestRoomEvent {
   RequestRoomCreate({required this.requestRoom});
 
   @override
-  List<Object?> get props => [RequestRoom];
+  List<Object?> get props => [requestRoom];
+}
+
+class RequestRoomDraft extends RequestRoomEvent {
+  final RequestRoomDrafts requestRoomDraft;
+
+  RequestRoomDraft({required this.requestRoomDraft});
+
+  @override
+  List<Object?> get props => [requestRoomDraft];
 }
