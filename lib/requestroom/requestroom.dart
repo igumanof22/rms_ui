@@ -14,6 +14,7 @@ class RequestRoom {
   final Room room;
   final Users user;
   final String? status;
+  final int? rank;
 
   RequestRoom({
     this.id,
@@ -28,6 +29,7 @@ class RequestRoom {
     required this.room,
     required this.user,
     this.status,
+    this.rank,
   });
 
   factory RequestRoom.fromMap(dynamic map) {
@@ -45,6 +47,7 @@ class RequestRoom {
       room: Room.fromMap(map['room']),
       user: Users.fromMap(map['user']),
       status: map['status'],
+      rank: map['rank'],
     );
   }
 }

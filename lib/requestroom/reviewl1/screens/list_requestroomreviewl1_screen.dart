@@ -52,7 +52,11 @@ class _HomeRequestRoomReviewL1ScreenState
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
+                        color: requestRoom.rank == 0
+                            ? Colors.white
+                            : requestRoom.rank == 1
+                                ? Colors.green
+                                : Colors.red,
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.grey,
