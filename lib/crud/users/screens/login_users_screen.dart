@@ -21,6 +21,7 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
   bool _isLoading = false;
+  bool _obscureText = true;
 
   @override
   void initState() {
@@ -60,9 +61,9 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
 
       if (state is UsersSuccess) {
         String role = pref.getString('role')!;
-        if (role.toLowerCase() == 'administrasi'){
+        if (role.toLowerCase() == 'administrasi') {
           Get.off(() => const HomeRequestRoomReviewL1Screen());
-        } else if(role.toLowerCase() == 'kasubag') {
+        } else if (role.toLowerCase() == 'kasubag') {
           Get.off(() => const HomeRequestRoomReviewL2Screen());
         } else {
           Get.off(() => const HomePageScreen());
@@ -83,9 +84,11 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
               TextFormField(
+                autofocus: true,
                 controller: _usernameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Username',
                   hintText: 'Username',
                 ),
                 readOnly: _isLoading,
@@ -94,9 +97,19 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
                 controller: _passwordController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Password',
                   hintText: 'Password',
                 ),
+                obscureText: _obscureText,
                 readOnly: _isLoading,
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+                child: Text(_obscureText ? "Show" : "Hide"),
               ),
               const SizedBox(height: 50),
               _isLoading

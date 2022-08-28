@@ -11,6 +11,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     on(_onSubmit);
     on(_onDraft);
     on(_onFetch);
+    on(_onGet);
   }
 
   Future<void> _onFetch(
@@ -21,6 +22,25 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
       List<RequestRoom> listRequestRoom = await RequestRoomService.fetch();
 
       emit(RequestRoomInitialized(listRequestRoom: listRequestRoom));
+    } catch (e) {
+      log(e.toString(), name: 'RequestRoomBloc - _onFetch');
+
+      showSnackbar('Gagal ambil RequestRoom', isError: true);
+
+      emit(RequestRoomError());
+      rethrow;
+    }
+  }
+
+  Future<void> _onGet(
+      RequestRoomGet event, Emitter<RequestRoomState> emit) async {
+    try {
+      emit(RequestRoomLoading());
+
+      DetailRequestRoom detailRequestRoom =
+          await RequestRoomService.getData(event.id);
+
+      emit(RequestRoomGetData(detailRequestRoom: detailRequestRoom));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onFetch');
 

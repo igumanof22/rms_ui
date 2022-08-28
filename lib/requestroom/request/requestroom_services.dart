@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/services/app.dart';
 
@@ -13,11 +14,18 @@ class RequestRoomService {
         .toList();
   }
 
+  static Future<DetailRequestRoom> getData(String id) async {
+    Response response = await _dio.get('/bpmn/RequestRoom/$id');
+
+    return DetailRequestRoom.fromMap(response.data['data']);
+  }
+
   static Future<void> create(RequestRoom requestRoom) async {
+    var outputFormat = DateFormat('yyyy-MM-dd');
     await _dio
         .post('/bpmn/RequestRoom?withVariable=true&decision=submit', data: {
-      'startDate': requestRoom.startDate,
-      'endDate': requestRoom.endDate,
+      'startDate': outputFormat.format(requestRoom.startDate),
+      'endDate': outputFormat.format(requestRoom.endDate),
       'startTime': requestRoom.startTime,
       'endTime': requestRoom.endTime,
       'activityName': requestRoom.activityName,

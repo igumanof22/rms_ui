@@ -152,6 +152,10 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
+              Text(
+                'Pilih Ruangan',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               BlocBuilder<RoomBloc, RoomState>(
                 builder: (context, state) {
                   if (state is RoomInitialized) {
@@ -178,9 +182,14 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 controller: _activityNameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Judul Acara',
                   hintText: 'Judul Acara',
                 ),
                 readOnly: _isLoading,
+              ),
+              Text(
+                'Pilih Tingkat Acara',
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               BlocBuilder<ActivityLevelBloc, ActivityLevelState>(
                 builder: (context, state) {
@@ -209,6 +218,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 onTap: _isLoading ? null : _showStartDatePickerAction,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Tanggal Mulai Acara',
                   hintText: 'Tanggal Mulai Acara',
                 ),
                 readOnly: true,
@@ -218,6 +228,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 onTap: _isLoading ? null : _showEndDatePickerAction,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Tanggal Akhir Acara',
                   hintText: 'Tanggal Akhir Acara',
                 ),
                 readOnly: true,
@@ -225,6 +236,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
               TextFormField(
                 controller: _startTimeController,
                 decoration: const InputDecoration(
+                  labelText: 'Jam Mulai Acara (HH:mm)',
                   hintText: 'Jam Mulai Acara (HH:mm)',
                 ),
                 readOnly: _isLoading,
@@ -233,7 +245,17 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 controller: _endTimeController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Jam Selesai Acara (HH:mm)',
                   hintText: 'Jam Selesai Acara (HH:mm)',
+                ),
+                readOnly: _isLoading,
+              ),
+              TextFormField(
+                controller: _participantController,
+                validator: ValidationBuilder().required().build(),
+                decoration: const InputDecoration(
+                  labelText: 'Jumlah Peserta',
+                  hintText: 'Jumlah Peserta',
                 ),
                 readOnly: _isLoading,
               ),

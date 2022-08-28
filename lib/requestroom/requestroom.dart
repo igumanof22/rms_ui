@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:rms_ui/barrel/models.dart';
 
 class RequestRoom {
@@ -13,12 +14,6 @@ class RequestRoom {
   final Room room;
   final Users user;
   final String? status;
-  final String? submittedBy;
-  final DateTime? submittedDate;
-  final String? reviewedBy;
-  final DateTime? reviewedDate;
-  final String? approvedBy;
-  final DateTime? approvedDate;
 
   RequestRoom({
     this.id,
@@ -33,20 +28,15 @@ class RequestRoom {
     required this.room,
     required this.user,
     this.status,
-    this.submittedBy,
-    this.submittedDate,
-    this.reviewedBy,
-    this.reviewedDate,
-    this.approvedBy,
-    this.approvedDate,
   });
 
   factory RequestRoom.fromMap(dynamic map) {
+    var outputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+'HH:mm");
     return RequestRoom(
       id: map['id'],
       requestId: map['requestId'],
-      startDate: map['startDate'],
-      endDate: map['endDate'],
+      startDate: outputFormat.parse(map['startDate']),
+      endDate: outputFormat.parse(map['endDate']),
       startTime: map['startTime'],
       endTime: map['endTime'],
       activityName: map['activityName'],
@@ -55,12 +45,51 @@ class RequestRoom {
       room: Room.fromMap(map['room']),
       user: Users.fromMap(map['user']),
       status: map['status'],
-      submittedBy: map['submittedBy'],
-      submittedDate: map['submittedDate'],
-      reviewedBy: map['reviewedBy'],
-      reviewedDate: map['reviewedDate'],
-      approvedBy: map['approvedBy'],
-      approvedDate: map['approvedDate'],
+    );
+  }
+}
+
+class DetailRequestRoom {
+  final RequestRoom requestRoom;
+  final List<Log> logs;
+
+  DetailRequestRoom({
+    required this.requestRoom,
+    required this.logs,
+  });
+
+  factory DetailRequestRoom.fromMap(dynamic map) {
+    return DetailRequestRoom(
+      requestRoom: RequestRoom.fromMap(map['object']),
+      logs: (map['logs'] as List).map((e) => Log.fromMap(e)).toList()
+    );
+  }
+}
+
+class Log {
+  final DateTime createdDate;
+  final String actBy;
+  final String actByName;
+  final String? remarks;
+  final String decisionRemark;
+
+  Log({
+    required this.createdDate,
+    required this.actBy,
+    required this.actByName,
+    this.remarks,
+    required this.decisionRemark,
+  });
+
+  factory Log.fromMap(dynamic map) {
+    var outputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+'HH:mm");
+
+    return Log(
+      createdDate: outputFormat.parse(map['createdDate']),
+      actBy: map['actBy'],
+      actByName: map['actByName'],
+      remarks: map['remarks'],
+      decisionRemark: map['decisionRemark'],
     );
   }
 }

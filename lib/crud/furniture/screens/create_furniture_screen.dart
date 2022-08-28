@@ -94,6 +94,7 @@ class _CreateFurnitureScreen extends State<CreateFurnitureScreen> {
                 controller: _nameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Nama Furniture',
                   hintText: 'Nama Furniture',
                 ),
                 readOnly: _isLoading,

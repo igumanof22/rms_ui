@@ -12,9 +12,12 @@ export '../crud/users/screens/login_users_screen.dart';
 export '../crud/users/screens/profile_users_screen.dart';
 
 export '../requestroom/homepage_screen.dart';
+export '../requestroom/detail_homepage_screen.dart';
 export '../requestroom/request/screens/list_requestroom_screen.dart';
 export '../requestroom/request/screens/create_requestroom_screen.dart';
 export '../requestroom/reviewl1/screens/list_requestroomreviewl1_screen.dart';
+export '../requestroom/reviewl1/screens/detail_requestroomreviewl1_screen.dart';
 export '../requestroom/reviewl2/screens/list_requestroomreviewl2_screen.dart';
+export '../requestroom/reviewl2/screens/detail_requestroomreviewl2_screen.dart';
 export '../requestroom/modify/screens/list_requestroommodify_screen.dart';
 export '../requestroom/modify/screens/create_requestroommodify_screen.dart';

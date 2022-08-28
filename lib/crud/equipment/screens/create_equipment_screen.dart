@@ -93,6 +93,7 @@ class _CreateEquipmentScreenState extends State<CreateEquipmentScreen> {
                 controller: _nameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Nama Equipment',
                   hintText: 'Nama Equipment',
                 ),
                 readOnly: _isLoading,

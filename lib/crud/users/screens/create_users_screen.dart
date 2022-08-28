@@ -83,6 +83,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                 controller: _userNameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Username',
                   hintText: 'Username',
                 ),
                 readOnly: _isLoading,
@@ -91,6 +92,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                 controller: _passwordController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Password',
                   hintText: 'Password',
                 ),
                 readOnly: _isLoading,
@@ -100,6 +102,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                 validator: ValidationBuilder().required().build(),
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
+                  labelText: 'Email',
                   hintText: 'Email',
                 ),
                 readOnly: _isLoading,
@@ -108,6 +111,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
                 controller: _nameController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Nama',
                   hintText: 'Nama',
                 ),
                 readOnly: _isLoading,

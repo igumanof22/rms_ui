@@ -47,33 +47,41 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1, 2),
-                          spreadRadius: .5,
-                          blurRadius: .5,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(requestRoom.requestId!),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                      ],
+                  child: GestureDetector(
+                    onTap: () => Get.to(() => DetailHomePageScreen(
+                          id: requestRoom.id!,
+                          requestId: requestRoom.requestId!,
+                        )),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 5),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1, 2),
+                            spreadRadius: .5,
+                            blurRadius: .5,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(requestRoom.requestId!),
+                              Text(requestRoom.status!),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
                     ),
                   ),
                 );

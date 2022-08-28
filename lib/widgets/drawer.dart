@@ -45,10 +45,16 @@ class _DrawerMenuState extends State<DrawerMenu> {
                     imageUrl: pref.getString('logo')!.isEmpty
                         ? 'https://picsum.photos/seed/picsum/800/800'
                         : pref.getString('logo')!,
-                    placeholder: (context, url) =>
-                        Image.asset('assets/image/logo.jpg', height: 100, width: 100,),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                    placeholder: (context, url) => Image.asset(
+                      'assets/image/logo.jpg',
+                      height: 100,
+                      width: 100,
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'assets/image/logo.jpg',
+                      height: 100,
+                      width: 100,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),

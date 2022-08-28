@@ -10,6 +10,15 @@ class RequestRoomFetch extends RequestRoomEvent {
   RequestRoomFetch();
 }
 
+class RequestRoomGet extends RequestRoomEvent {
+  final String id;
+  
+  RequestRoomGet(this.id);
+  
+  @override
+  List<Object?> get props => [id];
+}
+
 class RequestRoomCreate extends RequestRoomEvent {
   final RequestRoom requestRoom;
 

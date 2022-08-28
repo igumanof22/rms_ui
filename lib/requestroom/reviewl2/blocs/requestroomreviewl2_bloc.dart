@@ -11,6 +11,7 @@ class RequestRoomReviewL2Bloc
   RequestRoomReviewL2Bloc() : super(RequestRoomReviewL2Uninitialized()) {
     on(_onSubmit);
     on(_onFetch);
+    on(_onGet);
   }
 
   Future<void> _onFetch(RequestRoomReviewL2Fetch event,
@@ -28,6 +29,25 @@ class RequestRoomReviewL2Bloc
       showSnackbar('Gagal ambil data Request', isError: true);
 
       emit(RequestRoomReviewL2Error());
+    }
+  }
+
+      Future<void> _onGet(
+      RequestRoomReviewL2Get event, Emitter<RequestRoomReviewL2State> emit) async {
+    try {
+      emit(RequestRoomReviewL2Loading());
+
+      DetailRequestRoom detailRequestRoom =
+          await RequestRoomReviewL2Service.getData(event.id);
+
+      emit(RequestRoomReviewL2GetData(detailRequestRoom: detailRequestRoom));
+    } catch (e) {
+      log(e.toString(), name: 'RequestRoomBloc - _onFetch');
+
+      showSnackbar('Gagal ambil RequestRoom', isError: true);
+
+      emit(RequestRoomReviewL2Error());
+      rethrow;
     }
   }
 

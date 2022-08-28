@@ -6,20 +6,23 @@ class RequestRoomReviewL2Service {
   static final Dio _dio = App.instance.dio;
 
   static Future<List<RequestRoom>> fetch() async {
-    Response response = await _dio.get('/bpmn/RequestRoom/reviewRequestL2/list');
+    Response response =
+        await _dio.get('/bpmn/RequestRoom/reviewRequestL2/list');
 
     return (response.data['data']['content'] as List)
         .map((elm) => RequestRoom.fromMap(elm))
         .toList();
   }
 
+  static Future<DetailRequestRoom> getData(String id) async {
+    Response response = await _dio.get('/bpmn/RequestRoom/reviewRequestL2/$id');
+
+    return DetailRequestRoom.fromMap(response.data['data']);
+  }
+
   static Future<void> submit(String id, bool decision, String? reason) async {
-    String path =
-        '/bpmn/RequestRoom/reviewRequestL2/$id/submit?decision=$decision';
-    if (decision == true) {
-      await _dio.post(path, data: '');
-    } else {
-      await _dio.post('$path&withVariable=true&reason=$reason', data: '');
-    }
+    await _dio.post(
+        '/bpmn/RequestRoom/reviewRequestL2/$id/submit?decision=$decision&withVariable=true&reason=$reason',
+        data: '{}');
   }
 }

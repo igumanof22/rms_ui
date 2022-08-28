@@ -14,13 +14,15 @@ class RequestRoomReviewL1Service {
         .toList();
   }
 
+  static Future<DetailRequestRoom> getData(String id) async {
+    Response response = await _dio.get('/bpmn/RequestRoom/reviewRequestL1/$id');
+
+    return DetailRequestRoom.fromMap(response.data['data']);
+  }
+
   static Future<void> submit(String id, bool decision, String? reason) async {
-    String path =
-        '/bpmn/RequestRoom/reviewRequestL1/$id/submit?decision=$decision';
-    if (decision == true) {
-      await _dio.post(path, data: '');
-    } else {
-      await _dio.post('$path&withVariable=true&reason=$reason', data: '');
-    }
+    await _dio.post(
+        '/bpmn/RequestRoom/reviewRequestL1/$id/submit?decision=$decision&withVariable=true&reason=$reason',
+        data: '{}');
   }
 }

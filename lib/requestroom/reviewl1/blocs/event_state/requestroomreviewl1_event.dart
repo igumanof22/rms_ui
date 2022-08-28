@@ -9,6 +9,15 @@ class RequestRoomReviewL1Fetch extends RequestRoomReviewL1Event {
   RequestRoomReviewL1Fetch();
 }
 
+class RequestRoomReviewL1Get extends RequestRoomReviewL1Event {
+  final String id;
+  
+  RequestRoomReviewL1Get(this.id);
+  
+  @override
+  List<Object?> get props => [id];
+}
+
 class RequestRoomReviewL1Submit extends RequestRoomReviewL1Event {
   final String id;
   final String requestId;

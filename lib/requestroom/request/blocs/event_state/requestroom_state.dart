@@ -22,3 +22,12 @@ class RequestRoomInitialized extends RequestRoomState {
   @override
   List<Object?> get props => [listRequestRoom];
 }
+
+class RequestRoomGetData extends RequestRoomState {
+  final DetailRequestRoom detailRequestRoom;
+
+  RequestRoomGetData({required this.detailRequestRoom});
+
+  @override
+  List<Object?> get props => [detailRequestRoom];
+}

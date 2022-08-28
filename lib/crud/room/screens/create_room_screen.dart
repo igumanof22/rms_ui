@@ -128,6 +128,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 controller: _roomIdController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Room ID',
                   hintText: 'Room ID',
                 ),
                 readOnly: _isLoading,
@@ -136,6 +137,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 controller: _buildingController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Nama Gedung',
                   hintText: 'Nama Gedung',
                 ),
                 readOnly: _isLoading,
@@ -144,6 +146,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 controller: _categoryController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Kategori',
                   hintText: 'Kategori',
                 ),
                 readOnly: _isLoading,
@@ -153,6 +156,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 validator: ValidationBuilder().required().build(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
+                  labelText: 'Total kapasistas',
                   hintText: 'Total kapasistas',
                 ),
                 readOnly: _isLoading,

@@ -82,7 +82,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
       setState(() => _isLoading = false);
       Users user = state.users;
       _leaderController.text = user.leader ?? '';
-      _secretaryController.text = user.leader ?? '';
+      _secretaryController.text = user.secretary ?? '';
     }
   }
 
@@ -155,6 +155,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                 controller: _leaderController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
+                  labelText: 'Nama Ketua UKM / Nama Asli',
                   hintText: 'Nama Ketua UKM / Nama Asli',
                 ),
                 readOnly: _isLoading,
@@ -164,6 +165,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
                   controller: _secretaryController,
                   validator: ValidationBuilder().required().build(),
                   decoration: const InputDecoration(
+                    labelText: 'Nama Sekretaris UKM',
                     hintText: 'Nama Sekretaris UKM',
                   ),
                   readOnly: _isLoading,
