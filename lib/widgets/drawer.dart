@@ -100,7 +100,8 @@ class _DrawerMenuState extends State<DrawerMenu> {
           ),
           ListTile(
             title: const Text('Keluar'),
-            onTap: () {
+            onTap: () async {
+              await pref.clear();
               Get.off(() => const LoginUsersScreen());
             },
           ),

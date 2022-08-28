@@ -51,6 +51,7 @@ class _DetailRequestRoomReviewL2ScreenState
         decision: decision,
         reason: reason));
     Get.back();
+    Get.back();
   }
 
   void _submitAction() {

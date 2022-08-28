@@ -60,6 +60,8 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       showSnackbar('Sukses tambah Users');
 
       emit(UsersSuccess());
+
+      add(UsersFetch());
     } catch (e) {
       log(e.toString(), name: 'UsersBloc - _onCreate');
 
@@ -73,7 +75,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     try {
       emit(UsersLoading());
 
-    await UsersService.profile(event.id, event.profileModel);
+      await UsersService.profile(event.id, event.profileModel);
 
       showSnackbar('Sukses Ubah Profil User');
 
@@ -113,11 +115,15 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       UsersLoginModel login =
           await UsersService.login(event.username, event.password);
 
+      await pref.clear();
+
       await pref.setString('email', login.email);
       await pref.setString('name', login.name);
       await pref.setString('role', login.role);
       await pref.setString('id', login.id);
       await pref.setString('logo', login.logo ?? "");
+
+      await App.instance.init();
 
       showSnackbar('Login Berhasil');
 
