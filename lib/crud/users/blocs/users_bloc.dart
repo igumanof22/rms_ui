@@ -123,7 +123,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       await pref.setString('id', login.id);
       await pref.setString('logo', login.logo ?? "");
 
-      await App.instance.init();
+      await App.instance.init(pref);
 
       showSnackbar('Login Berhasil');
 

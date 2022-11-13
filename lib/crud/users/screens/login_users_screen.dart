@@ -62,10 +62,8 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
       if (state is UsersSuccess) {
         String role = pref.getString('role')!;
         if (role.toLowerCase() == 'administrasi') {
-          Get.off(() => const HomeRequestRoomReviewL1Screen());
-        } else if (role.toLowerCase() == 'kasubag') {
-          Get.off(() => const HomeRequestRoomReviewL2Screen());
-        } else {
+          Get.off(() => const HomeRequestRoomReviewScreen());
+        }  else {
           Get.off(() => const HomePageScreen());
         }
       }

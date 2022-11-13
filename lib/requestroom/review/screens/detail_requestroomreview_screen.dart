@@ -5,20 +5,20 @@ import 'package:intl/intl.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 
-class DetailRequestRoomReviewL1Screen extends StatefulWidget {
+class DetailRequestRoomReviewScreen extends StatefulWidget {
   final String id;
   final String requestId;
-  const DetailRequestRoomReviewL1Screen(
+  const DetailRequestRoomReviewScreen(
       {Key? key, required this.id, required this.requestId})
       : super(key: key);
 
   @override
-  State<DetailRequestRoomReviewL1Screen> createState() =>
-      _DetailRequestRoomReviewL1ScreenState();
+  State<DetailRequestRoomReviewScreen> createState() =>
+      _DetailRequestRoomReviewScreenState();
 }
 
-class _DetailRequestRoomReviewL1ScreenState
-    extends State<DetailRequestRoomReviewL1Screen> {
+class _DetailRequestRoomReviewScreenState
+    extends State<DetailRequestRoomReviewScreen> {
   final TextEditingController _roomController = TextEditingController();
   final TextEditingController _activityNameController = TextEditingController();
   final TextEditingController _activityLevelController =
@@ -30,22 +30,22 @@ class _DetailRequestRoomReviewL1ScreenState
   final TextEditingController _participantController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
   final TextEditingController _remarkController = TextEditingController();
-  late RequestRoomReviewL1Bloc _requestRoomReviewL1Bloc;
+  late RequestRoomReviewBloc _requestRoomReviewBloc;
   late RequestRoom requestRoom;
   List<Log> logs = [];
   bool _isLoading = false;
 
   @override
   void initState() {
-    _requestRoomReviewL1Bloc = BlocProvider.of(context);
+    _requestRoomReviewBloc = BlocProvider.of(context);
 
-    _requestRoomReviewL1Bloc.add(RequestRoomReviewL1Get(widget.id));
+    _requestRoomReviewBloc.add(RequestRoomReviewGet(widget.id));
 
     super.initState();
   }
 
   void _approveRejectAction(bool decision, String? reason) {
-    _requestRoomReviewL1Bloc.add(RequestRoomReviewL1Submit(
+    _requestRoomReviewBloc.add(RequestRoomReviewSubmit(
         id: requestRoom.id!,
         requestId: requestRoom.requestId!,
         decision: decision,
@@ -114,16 +114,16 @@ class _DetailRequestRoomReviewL1ScreenState
   }
 
   void _detailRequestRoomListener(
-      BuildContext context, RequestRoomReviewL1State state) {
-    if (state is RequestRoomReviewL1Loading) {
+      BuildContext context, RequestRoomReviewState state) {
+    if (state is RequestRoomReviewLoading) {
       setState(() => _isLoading = true);
     }
 
-    if (state is RequestRoomReviewL1GetData ||
-        state is RequestRoomReviewL1Error) {
+    if (state is RequestRoomReviewGetData ||
+        state is RequestRoomReviewError) {
       setState(() => _isLoading = false);
 
-      if (state is RequestRoomReviewL1GetData) {
+      if (state is RequestRoomReviewGetData) {
         setState(() => _isLoading = false);
 
         var outputFormat = DateFormat("dd MMMM yyyy");
@@ -145,11 +145,11 @@ class _DetailRequestRoomReviewL1ScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RequestRoomReviewL1Bloc, RequestRoomReviewL1State>(
+    return BlocListener<RequestRoomReviewBloc, RequestRoomReviewState>(
       listener: _detailRequestRoomListener,
       child: WillPopScope(
         onWillPop: () {
-          _requestRoomReviewL1Bloc.add(RequestRoomReviewL1Fetch());
+          _requestRoomReviewBloc.add(RequestRoomReviewFetch());
           return Future.value(true);
         },
         child: Scaffold(

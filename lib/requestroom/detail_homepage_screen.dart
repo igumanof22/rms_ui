@@ -69,6 +69,10 @@ class _DetailHomePageScreenState extends State<DetailHomePageScreen> {
     }
   }
 
+  void _downloadDocument() async {
+    _requestRoomBloc.add(RequestRoomDownload(widget.id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<RequestRoomBloc, RequestRoomState>(
@@ -146,6 +150,11 @@ class _DetailHomePageScreenState extends State<DetailHomePageScreen> {
                       ),
                       readOnly: true,
                     ),
+                    if (_statusController.text.trim() == 'Request Done')
+                      ElevatedButton(
+                        onPressed: _downloadDocument,
+                        child: const Text("Download Surat Peminjaman."),
+                      ),
                     Flexible(
                       child: ListView.builder(
                         shrinkWrap: true,

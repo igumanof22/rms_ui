@@ -5,11 +5,11 @@ import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/screens.dart';
 import 'package:rms_ui/barrel/services.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // init api
-  await App.instance.init();
+  await App.instance.init(null);
 
   runApp(const MyApp());
 }
@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ActivityLevelBloc()),
         BlocProvider(create: (_) => RequestRoomBloc()),
         BlocProvider(create: (_) => RequestRoomModifyBloc()),
-        BlocProvider(create: (_) => RequestRoomReviewL1Bloc()),
-        BlocProvider(create: (_) => RequestRoomReviewL2Bloc()),
+        BlocProvider(create: (_) => RequestRoomReviewBloc()),
+        BlocProvider(create: (_) => RequestRoomCompleteBloc()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

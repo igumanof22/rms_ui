@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
@@ -30,6 +31,8 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
   late RoomBloc _roomBloc;
   late ActivityLevelBloc _activityLevelBloc;
   bool _isLoading = false;
+  String _pictName = "";
+  String _pictPath = "";
   DateTime? _startDate;
   DateTime? _endDate;
   Room? _selectedRoom;
@@ -74,7 +77,8 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
         user: user,
       );
 
-      _requestRoomBloc.add(RequestRoomCreate(requestRoom: requestRoom));
+      _requestRoomBloc.add(RequestRoomCreate(
+          requestRoom: requestRoom, pictName: _pictName, pictPath: _pictPath));
     }
   }
 
@@ -93,7 +97,10 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
         user: user,
       );
 
-      _requestRoomBloc.add(RequestRoomDraft(requestRoomDraft: requestRoom));
+      _requestRoomBloc.add(RequestRoomDraft(
+          requestRoomDraft: requestRoom,
+          pictName: _pictName,
+          pictPath: _pictPath));
     }
   }
 
@@ -141,6 +148,24 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
     }
   }
 
+  void _getFile() async {
+    setState(() => _isLoading = true);
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      _pictPath = file.path!;
+      _pictName = file.name;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<RequestRoomBloc, RequestRoomState>(
@@ -152,6 +177,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             children: [
+              const SizedBox(height: 20),
               Text(
                 'Pilih Ruangan',
                 style: Theme.of(context).textTheme.subtitle1,
@@ -187,6 +213,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 ),
                 readOnly: _isLoading,
               ),
+              const SizedBox(height: 20),
               Text(
                 'Pilih Tingkat Acara',
                 style: Theme.of(context).textTheme.subtitle1,
@@ -259,6 +286,24 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                 ),
                 readOnly: _isLoading,
               ),
+              const SizedBox(height: 20),
+              Text(
+                'Pilih Foto Ruangan Sebelum Peminjaman',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              const SizedBox(height: 10),
+              _pictPath.isEmpty
+                  ? Align(
+                      alignment: Alignment.topLeft,
+                      child: TextButton(
+                        onPressed: _getFile,
+                        child: const Text('Pilih'),
+                      ),
+                    )
+                  : Text(
+                      _pictName,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
               const SizedBox(height: 50),
               _isLoading
                   ? Wrap(

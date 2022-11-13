@@ -1,30 +1,30 @@
 import 'package:equatable/equatable.dart';
 
-abstract class RequestRoomReviewL1Event extends Equatable {
+abstract class RequestRoomReviewEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class RequestRoomReviewL1Fetch extends RequestRoomReviewL1Event {
-  RequestRoomReviewL1Fetch();
+class RequestRoomReviewFetch extends RequestRoomReviewEvent {
+  RequestRoomReviewFetch();
 }
 
-class RequestRoomReviewL1Get extends RequestRoomReviewL1Event {
+class RequestRoomReviewGet extends RequestRoomReviewEvent {
   final String id;
   
-  RequestRoomReviewL1Get(this.id);
+  RequestRoomReviewGet(this.id);
   
   @override
   List<Object?> get props => [id];
 }
 
-class RequestRoomReviewL1Submit extends RequestRoomReviewL1Event {
+class RequestRoomReviewSubmit extends RequestRoomReviewEvent {
   final String id;
   final String requestId;
   final bool decision;
   final String? reason;
 
-  RequestRoomReviewL1Submit(
+  RequestRoomReviewSubmit(
       {required this.id, required this.requestId, required this.decision, this.reason});
 
   @override

@@ -6,23 +6,23 @@ import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
-class HomeRequestRoomReviewL2Screen extends StatefulWidget {
-  const HomeRequestRoomReviewL2Screen({Key? key}) : super(key: key);
+class HomeRequestRoomReviewScreen extends StatefulWidget {
+  const HomeRequestRoomReviewScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeRequestRoomReviewL2Screen> createState() =>
-      _HomeRequestRoomReviewL2ScreenState();
+  State<HomeRequestRoomReviewScreen> createState() =>
+      _HomeRequestRoomReviewScreenState();
 }
 
-class _HomeRequestRoomReviewL2ScreenState
-    extends State<HomeRequestRoomReviewL2Screen> {
-  late RequestRoomReviewL2Bloc _requestRoomBloc;
+class _HomeRequestRoomReviewScreenState
+    extends State<HomeRequestRoomReviewScreen> {
+  late RequestRoomReviewBloc _requestRoomReviewBloc;
 
   @override
   void initState() {
-    _requestRoomBloc = BlocProvider.of(context);
+    _requestRoomReviewBloc = BlocProvider.of(context);
 
-    _requestRoomBloc.add(RequestRoomReviewL2Fetch());
+    _requestRoomReviewBloc.add(RequestRoomReviewFetch());
 
     super.initState();
   }
@@ -31,9 +31,9 @@ class _HomeRequestRoomReviewL2ScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Review Request')),
-      body: BlocBuilder<RequestRoomReviewL2Bloc, RequestRoomReviewL2State>(
+      body: BlocBuilder<RequestRoomReviewBloc, RequestRoomReviewState>(
         builder: (context, state) {
-          if (state is RequestRoomReviewL2Initialized) {
+          if (state is RequestRoomReviewInitialized) {
             return ListView.builder(
               itemCount: state.listRequestRoom.length,
               itemBuilder: (context, index) {
@@ -42,7 +42,7 @@ class _HomeRequestRoomReviewL2ScreenState
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: GestureDetector(
-                    onTap: () => Get.to(() => DetailRequestRoomReviewL2Screen(
+                    onTap: () => Get.to(() => DetailRequestRoomReviewScreen(
                           id: requestRoom.id!,
                           requestId: requestRoom.requestId!,
                         )),
@@ -52,7 +52,11 @@ class _HomeRequestRoomReviewL2ScreenState
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
+                        color: requestRoom.rank == 0
+                            ? Colors.white
+                            : requestRoom.rank == 1
+                                ? Colors.green
+                                : Colors.red,
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.grey,
@@ -81,6 +85,7 @@ class _HomeRequestRoomReviewL2ScreenState
               },
             );
           }
+
           return const Center(
             child: CircularProgressIndicator(),
           );

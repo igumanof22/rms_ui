@@ -2,12 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/services/app.dart';
 
-class RequestRoomReviewL1Service {
+class RequestRoomReviewService {
   static final Dio _dio = App.instance.dio;
 
   static Future<List<RequestRoom>> fetch() async {
     Response response =
-        await _dio.get('/bpmn/RequestRoom/reviewRequestL1/list');
+        await _dio.get('/bpmn/RequestRoom/reviewRequest/list');
 
     return (response.data['data']['content'] as List)
         .map((elm) => RequestRoom.fromMap(elm))
@@ -15,14 +15,14 @@ class RequestRoomReviewL1Service {
   }
 
   static Future<DetailRequestRoom> getData(String id) async {
-    Response response = await _dio.get('/bpmn/RequestRoom/reviewRequestL1/$id');
+    Response response = await _dio.get('/bpmn/RequestRoom/reviewRequest/$id');
 
     return DetailRequestRoom.fromMap(response.data['data']);
   }
 
   static Future<void> submit(String id, bool decision, String? reason) async {
     await _dio.post(
-        '/bpmn/RequestRoom/reviewRequestL1/$id/submit?decision=$decision&withVariable=true&reason=$reason',
+        '/bpmn/RequestRoom/reviewRequest/$id/submit?decision=$decision&withVariable=true&reason=$reason',
         data: '{}');
   }
 }

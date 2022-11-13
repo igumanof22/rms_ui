@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/services.dart';
 import 'package:rms_ui/barrel/models.dart';
@@ -12,6 +13,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     on(_onDraft);
     on(_onFetch);
     on(_onGet);
+    on(_onDownload);
   }
 
   Future<void> _onFetch(
@@ -56,7 +58,8 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     try {
       emit(RequestRoomLoading());
 
-      await RequestRoomService.create(event.requestRoom);
+      await RequestRoomService.create(
+          event.requestRoom, event.pictName, event.pictPath);
 
       showSnackbar('Sukses Mengajukan Request');
 
@@ -78,7 +81,8 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     try {
       emit(RequestRoomLoading());
 
-      await RequestRoomService.draft(event.requestRoomDraft);
+      await RequestRoomService.draft(
+          event.requestRoomDraft, event.pictName, event.pictPath);
 
       showSnackbar('Sukses Menyimpan Request');
 
@@ -89,6 +93,32 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
       log(e.toString(), name: 'RequestRoomBloc - _onDraft');
 
       showSnackbar('Gagal Menyimpan Request', isError: true);
+
+      emit(RequestRoomError());
+      rethrow;
+    }
+  }
+
+  Future<void> _onDownload(
+      RequestRoomDownload event, Emitter<RequestRoomState> emit) async {
+    try {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+
+      if (statuses[Permission.storage]!.isGranted) {
+        emit(RequestRoomLoading());
+
+        await RequestRoomService.download(event.id);
+
+        emit(RequestRoomSuccess());
+      } else {
+        showSnackbar("No permission to read and write.", isError: true);
+      }
+    } catch (e) {
+      log(e.toString(), name: 'RequestRoomBloc - _onDownload');
+
+      showSnackbar('Gagal download dokument', isError: true);
 
       emit(RequestRoomError());
       rethrow;

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:rms_ui/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class App {
@@ -13,8 +14,12 @@ class App {
   late Dio dio;
   late SharedPreferences pref;
 
-  Future<void> init() async {
-    pref = await SharedPreferences.getInstance();
+  Future<void> init(SharedPreferences? prefr) async {
+    if (prefr != null) {
+      pref = prefr;
+    } else {
+      pref = await SharedPreferences.getInstance();
+    }
 
     String? role = pref.getString('role');
     String? name = pref.getString('name');
@@ -29,6 +34,9 @@ class App {
       onError: (e, handler) {
         log(e.requestOptions.uri.toString(), name: 'Dio Error');
         log(e.response?.data?.toString() ?? "");
+
+        String message = e.response?.data['message'] ?? "";
+        showSnackbar(message, isError: true);
 
         return handler.next(e);
       },

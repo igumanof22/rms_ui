@@ -6,23 +6,23 @@ import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
-class HomeRequestRoomReviewL1Screen extends StatefulWidget {
-  const HomeRequestRoomReviewL1Screen({Key? key}) : super(key: key);
+class HomeRequestRoomCompleteScreen extends StatefulWidget {
+  const HomeRequestRoomCompleteScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeRequestRoomReviewL1Screen> createState() =>
-      _HomeRequestRoomReviewL1ScreenState();
+  State<HomeRequestRoomCompleteScreen> createState() =>
+      _HomeRequestRoomCompleteScreenState();
 }
 
-class _HomeRequestRoomReviewL1ScreenState
-    extends State<HomeRequestRoomReviewL1Screen> {
-  late RequestRoomReviewL1Bloc _requestRoomReviewL1Bloc;
+class _HomeRequestRoomCompleteScreenState
+    extends State<HomeRequestRoomCompleteScreen> {
+  late RequestRoomCompleteBloc _requestRoomReviewBloc;
 
   @override
   void initState() {
-    _requestRoomReviewL1Bloc = BlocProvider.of(context);
+    _requestRoomReviewBloc = BlocProvider.of(context);
 
-    _requestRoomReviewL1Bloc.add(RequestRoomReviewL1Fetch());
+    _requestRoomReviewBloc.add(RequestRoomCompleteFetch());
 
     super.initState();
   }
@@ -31,9 +31,9 @@ class _HomeRequestRoomReviewL1ScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Review Request')),
-      body: BlocBuilder<RequestRoomReviewL1Bloc, RequestRoomReviewL1State>(
+      body: BlocBuilder<RequestRoomCompleteBloc, RequestRoomCompleteState>(
         builder: (context, state) {
-          if (state is RequestRoomReviewL1Initialized) {
+          if (state is RequestRoomCompleteInitialized) {
             return ListView.builder(
               itemCount: state.listRequestRoom.length,
               itemBuilder: (context, index) {
@@ -42,7 +42,7 @@ class _HomeRequestRoomReviewL1ScreenState
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: GestureDetector(
-                    onTap: () => Get.to(() => DetailRequestRoomReviewL1Screen(
+                    onTap: () => Get.to(() => DetailRequestRoomCompleteScreen(
                           id: requestRoom.id!,
                           requestId: requestRoom.requestId!,
                         )),
