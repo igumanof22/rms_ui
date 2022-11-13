@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
@@ -37,6 +38,8 @@ class _CreateRequestRoomModifyScreenState
   DateTime? _endDate;
   Room? _selectedRoom;
   ActivityLevel? _selectedActivityLevel;
+  String _pictName = "";
+  String _pictPath = "";
 
   @override
   void initState() {
@@ -78,8 +81,27 @@ class _CreateRequestRoomModifyScreenState
         user: user,
       );
 
-      _requestRoomBloc.add(RequestRoomModifyCreate(requestRoom: requestRoom));
+      _requestRoomBloc.add(RequestRoomModifySubmit(
+          requestRoom: requestRoom, pictName: _pictName, pictPath: _pictPath));
     }
+  }
+
+  void _getFile() async {
+    setState(() => _isLoading = true);
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      _pictPath = file.path!;
+      _pictName = file.name;
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _showStartDatePickerAction() async {
@@ -224,6 +246,24 @@ class _CreateRequestRoomModifyScreenState
                 ),
                 readOnly: _isLoading,
               ),
+              const SizedBox(height: 20),
+              Text(
+                'Pilih Foto Ruangan Sebelum Peminjaman',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              const SizedBox(height: 10),
+              _pictPath.isEmpty
+                  ? Align(
+                      alignment: Alignment.topLeft,
+                      child: TextButton(
+                        onPressed: _getFile,
+                        child: const Text('Pilih'),
+                      ),
+                    )
+                  : Text(
+                      _pictName,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
               const SizedBox(height: 50),
               _isLoading
                   ? Wrap(

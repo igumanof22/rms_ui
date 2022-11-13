@@ -31,12 +31,13 @@ class RequestRoomModifyBloc
     }
   }
 
-  Future<void> _onCreate(RequestRoomModifyCreate event,
+  Future<void> _onCreate(RequestRoomModifySubmit event,
       Emitter<RequestRoomModifyState> emit) async {
     try {
       emit(RequestRoomModifyLoading());
 
-      await RequestRoomModifyService.create(event.requestRoom);
+      await RequestRoomModifyService.submit(
+          event.requestRoom, event.pictName, event.pictPath);
 
       showSnackbar('Sukses tambah RequestRoomModify');
 

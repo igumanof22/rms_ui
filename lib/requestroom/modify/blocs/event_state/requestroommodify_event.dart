@@ -10,10 +10,15 @@ class RequestRoomModifyFetch extends RequestRoomModifyEvent {
   RequestRoomModifyFetch();
 }
 
-class RequestRoomModifyCreate extends RequestRoomModifyEvent {
+class RequestRoomModifySubmit extends RequestRoomModifyEvent {
   final RequestRoom requestRoom;
+  final String pictName;
+  final String pictPath;
 
-  RequestRoomModifyCreate({required this.requestRoom});
+  RequestRoomModifySubmit(
+      {required this.requestRoom,
+      required this.pictName,
+      required this.pictPath});
 
   @override
   List<Object?> get props => [RequestRoom];

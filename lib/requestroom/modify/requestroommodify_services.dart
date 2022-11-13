@@ -13,14 +13,18 @@ class RequestRoomModifyService {
         .toList();
   }
 
-  static Future<void> create(RequestRoom requestRoom) async {
-    await _dio.post('/bpmn/RequestRoom/modifyRequest', data: {
-      'startDate': requestRoom.startDate,
-      'endDate': requestRoom.endDate,
-      'startTime': requestRoom.startTime,
-      'endTime': requestRoom.endTime,
-      'activityName': requestRoom.activityName,
-      'activityLevel': requestRoom.activityLevel,
-    });
+  static Future<void> submit(
+      RequestRoom requestRoom, String fileName, String filePath) async {
+    var pict = await MultipartFile.fromFile(filePath, filename: fileName);
+    await _dio.post(
+        '/bpmn/RequestRoom/modifyRequest?withVariable=true&pict=$pict',
+        data: {
+          'startDate': requestRoom.startDate,
+          'endDate': requestRoom.endDate,
+          'startTime': requestRoom.startTime,
+          'endTime': requestRoom.endTime,
+          'activityName': requestRoom.activityName,
+          'activityLevel': requestRoom.activityLevel,
+        });
   }
 }
