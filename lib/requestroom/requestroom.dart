@@ -63,9 +63,8 @@ class DetailRequestRoom {
 
   factory DetailRequestRoom.fromMap(dynamic map) {
     return DetailRequestRoom(
-      requestRoom: RequestRoom.fromMap(map['object']),
-      logs: (map['logs'] as List).map((e) => Log.fromMap(e)).toList()
-    );
+        requestRoom: RequestRoom.fromMap(map['object']),
+        logs: (map['logs'] as List).map((e) => Log.fromMap(e)).toList());
   }
 }
 
@@ -119,4 +118,20 @@ class RequestRoomDrafts {
     this.room,
     this.user,
   });
+}
+
+class Minio {
+  final String fileName;
+  final String filePath;
+
+  Minio({
+    required this.fileName,
+    required this.filePath
+  });
+
+  factory Minio.fromMap(dynamic map) {
+    return Minio(
+        fileName: map['fileName'],
+        filePath: map['filePath']);
+  }
 }

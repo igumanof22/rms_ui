@@ -22,9 +22,14 @@ class RequestRoomCompleteService {
 
   static Future<void> submit(
       String id, String fileName, String filePath) async {
-    var pict = await MultipartFile.fromFile(filePath, filename: fileName);
-    await _dio.post(
-        '/bpmn/RequestRoom/reviewRequest/$id/submit?withVariable=true&pict=$pict',
-        data: '{}');
+    var formData = FormData.fromMap(
+        {'pict': await MultipartFile.fromFile(filePath, filename: fileName)});
+    Response response =
+        await _dio.post('/bpmn/RequestRoom/upload', data: formData);
+
+    Minio minio = Minio.fromMap(response.data['data']);
+    await _dio.post('/bpmn/RequestRoom/reviewRequest/$id/submit', data: {
+      'lastPictPath': minio.filePath,
+    });
   }
 }
