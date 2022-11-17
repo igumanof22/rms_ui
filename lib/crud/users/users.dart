@@ -95,8 +95,14 @@ class UsersProfileModel {
   final String? leaderSignatureName;
   final String? secretarySignaturePath;
   final String? secretarySignatureName;
+  final String? elderSignaturePath;
+  final String? elderSignatureName;
   final String? leader;
+  final String? nimNipLeader;
   final String? secretary;
+  final String? nimNipSecretary;
+  final String? elder;
+  final String? nipElder;
 
   UsersProfileModel({
     this.logoPath,
@@ -105,7 +111,13 @@ class UsersProfileModel {
     this.leaderSignatureName,
     this.secretarySignaturePath,
     this.secretarySignatureName,
+    this.elderSignaturePath,
+    this.elderSignatureName,
     this.leader,
+    this.nimNipLeader,
     this.secretary,
+    this.nimNipSecretary,
+    this.elder,
+    this.nipElder
   });
 }

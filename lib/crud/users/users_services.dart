@@ -31,6 +31,7 @@ class UsersService {
   static Future<void> profile(String id, UsersProfileModel profile) async {
     var formData = FormData.fromMap({
       'leader': profile.leader,
+      'nimNipLeader': profile.nimNipLeader,
       if (profile.leaderSignatureName != null &&
           profile.leaderSignatureName!.isNotEmpty)
         'leaderSignature': await MultipartFile.fromFile(
@@ -45,6 +46,14 @@ class UsersService {
             profile.secretarySignaturePath!,
             filename: profile.secretarySignatureName),
       'secretary': profile.secretary,
+      'nimNipSecretary': profile.nimNipSecretary,
+      if (profile.elderSignatureName != null &&
+          profile.elderSignatureName!.isNotEmpty)
+        'elderSignature': await MultipartFile.fromFile(
+            profile.elderSignaturePath!,
+            filename: profile.elderSignatureName),
+      'elder': profile.elder,
+      'nipElder': profile.nipElder,
     });
     await _dio.post('/crud/user/profile/$id', data: formData);
   }

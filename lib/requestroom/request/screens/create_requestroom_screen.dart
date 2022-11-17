@@ -316,13 +316,13 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
                       onPressed: _submitAction,
                       child: const Text('Submit'),
                     ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const Text('')
-                  : ElevatedButton(
-                      onPressed: _draftAction,
-                      child: const Text('Simpan'),
-                    ),
+              // const SizedBox(height: 20),
+              // _isLoading
+              //     ? const Text('')
+              //     : ElevatedButton(
+              //         onPressed: _draftAction,
+              //         child: const Text('Simpan'),
+              //       ),
             ],
           ),
         ),
