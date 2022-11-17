@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
+import 'package:rms_ui/services/app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeRoomScreen extends StatefulWidget {
   const HomeRoomScreen({Key? key}) : super(key: key);
@@ -13,13 +15,16 @@ class HomeRoomScreen extends StatefulWidget {
 }
 
 class _HomeRoomScreenState extends State<HomeRoomScreen> {
+  final SharedPreferences pref = App.instance.pref;
   late RoomBloc _roomBloc;
+  late String? _role;
 
   @override
   void initState() {
     _roomBloc = BlocProvider.of(context);
 
     _roomBloc.add(RoomFetch());
+    _role = pref.getString('role');
 
     super.initState();
   }
@@ -29,7 +34,10 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
   }
 
   void _toDetailRoomAction(List<RoomItem> items, String roomId) {
-    Get.to(() => DetailRoomScreen(items: items, roomId: roomId,));
+    Get.to(() => DetailRoomScreen(
+          items: items,
+          roomId: roomId,
+        ));
   }
 
   void _toEditRoomAction(Room room) {
@@ -51,7 +59,8 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2),
                   child: GestureDetector(
-                    onTap: () => _toDetailRoomAction(room.roomItem, room.roomId),
+                    onTap: () =>
+                        _toDetailRoomAction(room.roomItem, room.roomId),
                     child: Container(
                       margin: const EdgeInsets.symmetric(
                           vertical: 2, horizontal: 5),
@@ -80,27 +89,29 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
                               Text(room.totalCapacity.toString()),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () => _toEditRoomAction(room),
-                                  child: const Text('Edit'),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.red.shade400,
+                          if (_role == 'ART' || _role == 'ADMIN')
+                            const SizedBox(height: 10),
+                          if (_role == 'ART' || _role == 'ADMIN')
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () => _toEditRoomAction(room),
+                                    child: const Text('Edit'),
                                   ),
-                                  child: const Text('Hapus'),
                                 ),
-                              ),
-                            ],
-                          )
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.red.shade400,
+                                    ),
+                                    child: const Text('Hapus'),
+                                  ),
+                                ),
+                              ],
+                            )
                         ],
                       ),
                     ),

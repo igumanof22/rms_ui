@@ -17,7 +17,7 @@ class _CreateUsersScreenState extends State<CreateUsersScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final List<String> _role = ['ART', 'ADMINISTRASI', 'KASUBAG'];
+  final List<String> _role = ['ART', 'ADMINISTRASI'];
   final GlobalKey<FormState> _form = GlobalKey();
   late UsersBloc _usersBloc;
   bool _isLoading = false;

@@ -64,7 +64,7 @@ class _ProfileUsersScreenState extends State<ProfileUsersScreen> {
         secretarySignaturePath: _secretarySignaturePath,
         secretarySignatureName: _secretarySignatureName,
         elderSignaturePath: _elderSignaturePath,
-        elderSignatureName: _elderSignaturePath,
+        elderSignatureName: _elderSignatureName,
         leader: _leaderController.text.trim(),
         nimNipLeader: _leaderNimController.text.trim(),
         secretary: _secretaryController.text.trim(),
