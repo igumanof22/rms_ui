@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
@@ -14,6 +15,9 @@ class HomeUsersScreen extends StatefulWidget {
 
 class _HomeUsersScreenState extends State<HomeUsersScreen> {
   late UsersBloc _usersBloc;
+
+  final List<String> _drop = ['Edit', 'Hapus'];
+  String? _selectedDrop;
 
   @override
   void initState() {
@@ -58,39 +62,32 @@ class _HomeUsersScreenState extends State<HomeUsersScreen> {
                         )
                       ],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              users.name!,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                          ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          users.name!,
+                          style: Theme.of(context).textTheme.subtitle1,
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: const Text('Edit'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.red.shade400,
-                                ),
-                                child: const Text('Hapus'),
-                              ),
-                            ),
-                          ],
-                        )
+                        SizedBox(
+                          width: 150,
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedDrop,
+                            hint: const Text('Aksi'),
+                            borderRadius: null,
+                            decoration: const InputDecoration.collapsed(hintText: 'Aksi'),
+                            validator: ValidationBuilder().required().build(),
+                            items: _drop
+                                .map((e) => DropdownMenuItem<String>(
+                                      value: e,
+                                      child: Text(e),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),

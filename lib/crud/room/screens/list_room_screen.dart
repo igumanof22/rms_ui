@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
@@ -18,6 +19,9 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
   final SharedPreferences pref = App.instance.pref;
   late RoomBloc _roomBloc;
   late String? _role;
+
+  final List<String> _drop = ['Edit', 'Hapus'];
+  String? _selectedDrop;
 
   @override
   void initState() {
@@ -77,41 +81,37 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
                           )
                         ],
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(room.roomId),
-                              Text(room.building),
-                              Text(room.category),
-                              Text(room.totalCapacity.toString()),
-                            ],
-                          ),
+                          Text(room.roomId),
+                          Text(room.building),
+                          Text(room.category),
+                          Text(room.totalCapacity.toString()),
                           if (_role == 'ART' || _role == 'ADMIN')
-                            const SizedBox(height: 10),
-                          if (_role == 'ART' || _role == 'ADMIN')
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _toEditRoomAction(room),
-                                    child: const Text('Edit'),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.red.shade400,
-                                    ),
-                                    child: const Text('Hapus'),
-                                  ),
-                                ),
-                              ],
-                            )
+                            SizedBox(
+                              width: 150,
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedDrop,
+                                hint: const Text('Aksi'),
+                                borderRadius: null,
+                                decoration: const InputDecoration.collapsed(
+                                    hintText: 'Aksi'),
+                                validator:
+                                    ValidationBuilder().required().build(),
+                                items: _drop
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e,
+                                          child: Text(e),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value == 'Edit') {
+                                    _toEditRoomAction(room);
+                                  }
+                                },
+                              ),
+                            ),
                         ],
                       ),
                     ),

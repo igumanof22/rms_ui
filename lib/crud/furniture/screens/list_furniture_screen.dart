@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
@@ -14,6 +15,9 @@ class HomeFurnitureScreen extends StatefulWidget {
 
 class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
   late FurnitureBloc _furnitureBloc;
+
+  final List<String> _drop = ['Edit', 'Hapus'];
+  String? _selectedDrop;
 
   @override
   void initState() {
@@ -73,29 +77,33 @@ class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(furniture.nama),
+                            SizedBox(
+                              width: 150,
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedDrop,
+                                hint: const Text('Aksi'),
+                                borderRadius: null,
+                                decoration: const InputDecoration.collapsed(
+                                    hintText: 'Aksi'),
+                                validator:
+                                    ValidationBuilder().required().build(),
+                                items: _drop
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e,
+                                          child: Text(e),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value == 'Edit') {
+                                    _toEditFurnitureAction(furniture.id!);
+                                  } else {
+                                    _toDeleteFurnitureAction(furniture.id!);
+                                  }
+                                },
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _toEditFurnitureAction(furniture.id!),
-                                child: const Text('Edit'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _toDeleteFurnitureAction(furniture.id!),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.red.shade400,
-                                ),
-                                child: const Text('Hapus'),
-                              ),
-                            ),
-                          ],
-                        )
                       ],
                     ),
                   ),

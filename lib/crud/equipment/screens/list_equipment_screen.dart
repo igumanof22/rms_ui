@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
@@ -14,6 +15,9 @@ class HomeEquipmentScreen extends StatefulWidget {
 
 class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
   late EquipmentBloc _equipmentBloc;
+
+  final List<String> _drop = ['Edit', 'Hapus'];
+  String? _selectedDrop;
 
   @override
   void initState() {
@@ -72,30 +76,33 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(equipment.nama),
+                            SizedBox(
+                              width: 150,
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedDrop,
+                                hint: const Text('Aksi'),
+                                borderRadius: null,
+                                decoration: const InputDecoration.collapsed(
+                                    hintText: 'Aksi'),
+                                validator:
+                                    ValidationBuilder().required().build(),
+                                items: _drop
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e,
+                                          child: Text(e),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value == 'Edit') {
+                                    _toEditEquipmentAction(equipment.id!);
+                                  } else {
+                                    _toDeleteEquipmentAction(equipment.id!);
+                                  }
+                                },
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () =>
-                                    _toEditEquipmentAction(equipment.id!),
-                                child: const Text('Edit'),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _toDeleteEquipmentAction(equipment.id!),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.red.shade400,
-                                ),
-                                child: const Text('Hapus'),
-                              ),
-                            ),
-                          ],
-                        )
                       ],
                     ),
                   ),
