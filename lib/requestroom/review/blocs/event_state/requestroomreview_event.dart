@@ -6,13 +6,18 @@ abstract class RequestRoomReviewEvent extends Equatable {
 }
 
 class RequestRoomReviewFetch extends RequestRoomReviewEvent {
-  RequestRoomReviewFetch();
+  final String requestId;
+  
+  RequestRoomReviewFetch({required this.requestId});
+  
+  @override
+  List<Object?> get props => [requestId];
 }
 
 class RequestRoomReviewGet extends RequestRoomReviewEvent {
   final String id;
   
-  RequestRoomReviewGet(this.id);
+  RequestRoomReviewGet({required this.id});
   
   @override
   List<Object?> get props => [id];

@@ -39,7 +39,7 @@ class _DetailRequestRoomReviewScreenState
   void initState() {
     _requestRoomReviewBloc = BlocProvider.of(context);
 
-    _requestRoomReviewBloc.add(RequestRoomReviewGet(widget.id));
+    _requestRoomReviewBloc.add(RequestRoomReviewGet(id: widget.id));
 
     super.initState();
   }
@@ -149,7 +149,7 @@ class _DetailRequestRoomReviewScreenState
       listener: _detailRequestRoomListener,
       child: WillPopScope(
         onWillPop: () {
-          _requestRoomReviewBloc.add(RequestRoomReviewFetch());
+          _requestRoomReviewBloc.add(RequestRoomReviewFetch(requestId: ''));
           return Future.value(true);
         },
         child: Scaffold(

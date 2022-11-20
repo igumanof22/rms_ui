@@ -20,7 +20,7 @@ class RequestRoomReviewBloc
       emit(RequestRoomReviewLoading());
 
       List<RequestRoom> listRequestRoom =
-          await RequestRoomReviewService.fetch();
+          await RequestRoomReviewService.fetch(event.requestId);
 
       emit(RequestRoomReviewInitialized(listRequestRoom: listRequestRoom));
     } catch (e) {
@@ -67,7 +67,7 @@ class RequestRoomReviewBloc
 
       emit(RequestRoomReviewSuccess());
 
-      add(RequestRoomReviewFetch());
+      add(RequestRoomReviewFetch(requestId: ''));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomReviewBloc - _onCreate');
 
