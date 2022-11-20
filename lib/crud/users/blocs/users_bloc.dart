@@ -23,7 +23,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     try {
       emit(UsersLoading());
 
-      List<Users> listUsers = await UsersService.fetch();
+      List<Users> listUsers = await UsersService.fetch(event.name);
 
       emit(UsersInitialized(listUsers: listUsers));
     } catch (e) {
@@ -61,7 +61,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
       emit(UsersSuccess());
 
-      add(UsersFetch());
+      add(UsersFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'UsersBloc - _onCreate');
 

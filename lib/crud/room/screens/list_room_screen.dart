@@ -27,7 +27,7 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
   void initState() {
     _roomBloc = BlocProvider.of(context);
 
-    _roomBloc.add(RoomFetch());
+    _roomBloc.add(RoomFetch(roomId: ''));
     _role = pref.getString('role');
 
     super.initState();
@@ -52,79 +52,97 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Daftar Ruangan')),
-      body: BlocBuilder<RoomBloc, RoomState>(
-        builder: (context, state) {
-          if (state is RoomInitialized) {
-            return ListView.builder(
-              itemCount: state.listRoom.length,
-              itemBuilder: (context, index) {
-                Room room = state.listRoom[index];
+      body: Column(
+        children: [
+          TextField(
+            textInputAction: TextInputAction.go,
+            decoration: const InputDecoration(
+              labelText: 'Cari Berdasarkan Room Id',
+              hintText: 'Cari Berdasarkan Room ID',
+            ),
+            onSubmitted: (value) {
+              _roomBloc.add(RoomFetch(roomId: value));
+            },
+          ),
+          BlocBuilder<RoomBloc, RoomState>(
+            builder: (context, state) {
+              if (state is RoomInitialized) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: state.listRoom.length,
+                    itemBuilder: (context, index) {
+                      Room room = state.listRoom[index];
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: GestureDetector(
-                    onTap: () =>
-                        _toDetailRoomAction(room.roomItem, room.roomId),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 5),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1, 2),
-                            spreadRadius: .5,
-                            blurRadius: .5,
-                          )
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(room.roomId),
-                          Text(room.building),
-                          Text(room.category),
-                          Text(room.totalCapacity.toString()),
-                          if (_role == 'ART' || _role == 'ADMIN')
-                            SizedBox(
-                              width: 150,
-                              child: DropdownButtonFormField<String>(
-                                value: _selectedDrop,
-                                hint: const Text('Aksi'),
-                                borderRadius: null,
-                                decoration: const InputDecoration.collapsed(
-                                    hintText: 'Aksi'),
-                                validator:
-                                    ValidationBuilder().required().build(),
-                                items: _drop
-                                    .map((e) => DropdownMenuItem<String>(
-                                          value: e,
-                                          child: Text(e),
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                  if (value == 'Edit') {
-                                    _toEditRoomAction(room);
-                                  }
-                                },
-                              ),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: GestureDetector(
+                          onTap: () =>
+                              _toDetailRoomAction(room.roomItem, room.roomId),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 5),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(1, 2),
+                                  spreadRadius: .5,
+                                  blurRadius: .5,
+                                )
+                              ],
                             ),
-                        ],
-                      ),
-                    ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(room.roomId),
+                                Text(room.building),
+                                Text(room.category),
+                                Text(room.totalCapacity.toString()),
+                                if (_role == 'ART' || _role == 'ADMIN')
+                                  SizedBox(
+                                    width: 150,
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedDrop,
+                                      hint: const Text('Aksi'),
+                                      borderRadius: null,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: 'Aksi'),
+                                      validator: ValidationBuilder()
+                                          .required()
+                                          .build(),
+                                      items: _drop
+                                          .map((e) => DropdownMenuItem<String>(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        if (value == 'Edit') {
+                                          _toEditRoomAction(room);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
-              },
-            );
-          }
+              }
 
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _toCreateRoomAction,

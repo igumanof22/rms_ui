@@ -24,7 +24,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   void initState() {
     _requestRoomBloc = BlocProvider.of(context);
     role = pref.getString('role');
-    _requestRoomBloc.add(RequestRoomFetch());
+    _requestRoomBloc.add(RequestRoomFetch(requestId: ''));
 
     super.initState();
   }
@@ -37,63 +37,78 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Manajemen Ruang')),
-      body: BlocBuilder<RequestRoomBloc, RequestRoomState>(
-        builder: (context, state) {
-          if (state is RequestRoomInitialized) {
-            return ListView.builder(
-              itemCount: state.listRequestRoom.length,
-              itemBuilder: (context, index) {
-                RequestRoom requestRoom = state.listRequestRoom[index];
+      body: Column(children: [
+        TextField(
+          textInputAction: TextInputAction.go,
+          decoration: const InputDecoration(
+            labelText: 'Cari Berdasarkan Request Id',
+            hintText: 'Cari Berdasarkan Request Id',
+          ),
+          onSubmitted: (value) {
+            _requestRoomBloc.add(RequestRoomFetch(requestId: value));
+          },
+        ),
+        BlocBuilder<RequestRoomBloc, RequestRoomState>(
+          builder: (context, state) {
+            if (state is RequestRoomInitialized) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: state.listRequestRoom.length,
+                  itemBuilder: (context, index) {
+                    RequestRoom requestRoom = state.listRequestRoom[index];
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: GestureDetector(
-                    onTap: () => Get.to(() => DetailHomePageScreen(
-                          id: requestRoom.id!,
-                          requestId: requestRoom.requestId!,
-                        )),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 5),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1, 2),
-                            spreadRadius: .5,
-                            blurRadius: .5,
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(requestRoom.requestId!),
-                              Text(requestRoom.status!),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: GestureDetector(
+                        onTap: () => Get.to(() => DetailHomePageScreen(
+                              id: requestRoom.id!,
+                              requestId: requestRoom.requestId!,
+                            )),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 5),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1, 2),
+                                spreadRadius: .5,
+                                blurRadius: .5,
+                              )
                             ],
                           ),
-                          const SizedBox(height: 10),
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(requestRoom.requestId!),
+                                  Text(requestRoom.status!),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+                    );
+                  },
+                ),
+              );
+            }
 
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ]),
       drawer: const DrawerMenu(),
       floatingActionButton: role != 'ADMIN' && role != 'ART'
           ? FloatingActionButton(

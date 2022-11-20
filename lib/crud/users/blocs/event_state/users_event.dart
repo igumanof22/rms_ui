@@ -7,7 +7,12 @@ abstract class UsersEvent extends Equatable {
 }
 
 class UsersFetch extends UsersEvent {
-  UsersFetch();
+  final String name;
+
+  UsersFetch({required this.name});
+
+  @override
+  List<Object?> get props => [name];
 }
 
 class UsersGet extends UsersEvent {

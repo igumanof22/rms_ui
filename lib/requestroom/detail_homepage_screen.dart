@@ -35,7 +35,7 @@ class _DetailHomePageScreenState extends State<DetailHomePageScreen> {
   void initState() {
     _requestRoomBloc = BlocProvider.of(context);
 
-    _requestRoomBloc.add(RequestRoomGet(widget.id));
+    _requestRoomBloc.add(RequestRoomGet(id: widget.id));
 
     super.initState();
   }
@@ -79,7 +79,7 @@ class _DetailHomePageScreenState extends State<DetailHomePageScreen> {
       listener: _detailRequestRoomListener,
       child: WillPopScope(
         onWillPop: () {
-          _requestRoomBloc.add(RequestRoomFetch());
+          _requestRoomBloc.add(RequestRoomFetch(requestId: ''));
           return Future.value(true);
         },
         child: Scaffold(

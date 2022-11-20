@@ -5,8 +5,14 @@ import 'package:rms_ui/services/app.dart';
 class UsersService {
   static final Dio _dio = App.instance.dio;
 
-  static Future<List<Users>> fetch() async {
-    Response response = await _dio.get('/crud/user');
+  static Future<List<Users>> fetch(String name) async {
+    Response response;
+
+    if (name.isEmpty) {
+      response = await _dio.get('/crud/user');
+    } else {
+      response = await _dio.get('/crud/user?name=$name');
+    }
 
     return (response.data['data']['content'] as List)
         .map((elm) => Users.fromMap(elm))

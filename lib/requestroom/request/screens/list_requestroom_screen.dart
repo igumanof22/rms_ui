@@ -19,7 +19,7 @@ class _HomeRequestRoomScreenState extends State<HomeRequestRoomScreen> {
   void initState() {
     _requestRoomBloc = BlocProvider.of(context);
 
-    _requestRoomBloc.add(RequestRoomFetch());
+    _requestRoomBloc.add(RequestRoomFetch(requestId: ''));
 
     super.initState();
   }

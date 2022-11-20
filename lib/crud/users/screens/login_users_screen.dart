@@ -63,7 +63,7 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
         String role = pref.getString('role')!;
         if (role.toLowerCase() == 'administrasi') {
           Get.off(() => const HomeRequestRoomReviewScreen());
-        }  else {
+        } else {
           Get.off(() => const HomePageScreen());
         }
       }
@@ -92,6 +92,7 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
                 readOnly: _isLoading,
               ),
               TextFormField(
+                textInputAction: TextInputAction.go,
                 controller: _passwordController,
                 validator: ValidationBuilder().required().build(),
                 decoration: const InputDecoration(
@@ -100,6 +101,9 @@ class _LoginUsersScreenState extends State<LoginUsersScreen> {
                 ),
                 obscureText: _obscureText,
                 readOnly: _isLoading,
+                onFieldSubmitted: (value) {
+                  _loginAction();
+                },
               ),
               TextButton(
                 onPressed: () {

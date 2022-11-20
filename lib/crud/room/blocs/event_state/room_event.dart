@@ -7,7 +7,11 @@ abstract class RoomEvent extends Equatable {
 }
 
 class RoomFetch extends RoomEvent {
-  RoomFetch();
+  final String roomId;
+  RoomFetch({required this.roomId});
+
+  @override
+  List<Object?> get props => [roomId];
 }
 
 class RoomGet extends RoomEvent {

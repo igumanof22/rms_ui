@@ -21,7 +21,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     try {
       emit(RequestRoomLoading());
 
-      List<RequestRoom> listRequestRoom = await RequestRoomService.fetch();
+      List<RequestRoom> listRequestRoom = await RequestRoomService.fetch(event.requestId);
 
       emit(RequestRoomInitialized(listRequestRoom: listRequestRoom));
     } catch (e) {
@@ -65,7 +65,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
 
       emit(RequestRoomSuccess());
 
-      add(RequestRoomFetch());
+      add(RequestRoomFetch(requestId: ''));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onSubmit');
 
@@ -88,7 +88,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
 
       emit(RequestRoomSuccess());
 
-      add(RequestRoomFetch());
+      add(RequestRoomFetch(requestId: ''));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onDraft');
 

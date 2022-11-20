@@ -18,7 +18,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     try {
       emit(RoomLoading());
 
-      List<Room> listRoom = await RoomService.fetch();
+      List<Room> listRoom = await RoomService.fetch(event.roomId);
 
       emit(RoomInitialized(listRoom: listRoom));
     } catch (e) {
@@ -57,7 +57,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       emit(RoomSuccess());
 
-      add(RoomFetch());
+      add(RoomFetch(roomId: ''));
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onCreate');
 
@@ -78,7 +78,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       emit(RoomSuccess());
 
-      add(RoomFetch());
+      add(RoomFetch(roomId: ''));
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onUpdate');
 

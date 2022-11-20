@@ -25,8 +25,8 @@ class _DialogBuilderState extends State<DialogBuilder> {
     _equipmentBloc = BlocProvider.of(context);
     _furnitureBloc = BlocProvider.of(context);
 
-    _equipmentBloc.add(EquipmentFetch());
-    _furnitureBloc.add(FurnitureFetch());
+    _equipmentBloc.add(EquipmentFetch(name: ''));
+    _furnitureBloc.add(FurnitureFetch(name: ''));
 
     super.initState();
   }

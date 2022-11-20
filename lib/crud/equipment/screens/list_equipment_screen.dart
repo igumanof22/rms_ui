@@ -22,7 +22,7 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
   @override
   void initState() {
     _equipmentBloc = BlocProvider.of(context);
-    _equipmentBloc.add(EquipmentFetch());
+    _equipmentBloc.add(EquipmentFetch(name: ''));
 
     super.initState();
   }
@@ -43,78 +43,98 @@ class _HomeEquipmentScreenState extends State<HomeEquipmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Daftar Peralatan')),
-      body: BlocBuilder<EquipmentBloc, EquipmentState>(
-        builder: (context, state) {
-          if (state is EquipmentInitialized) {
-            return ListView.builder(
-              itemCount: state.listEquipment.length,
-              itemBuilder: (context, index) {
-                Equipment equipment = state.listEquipment[index];
+      body: Column(
+        children: [
+          TextField(
+            textInputAction: TextInputAction.go,
+            decoration: const InputDecoration(
+              labelText: 'Cari Berdasarkan Nama',
+              hintText: 'Cari Berdasarkan Nama',
+            ),
+            onSubmitted: (value) {
+              _equipmentBloc.add(EquipmentFetch(name: value));
+            },
+          ),
+          BlocBuilder<EquipmentBloc, EquipmentState>(
+            builder: (context, state) {
+              if (state is EquipmentInitialized) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: state.listEquipment.length,
+                    itemBuilder: (context, index) {
+                      Equipment equipment = state.listEquipment[index];
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1, 2),
-                          spreadRadius: .5,
-                          blurRadius: .5,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(equipment.nama),
-                            SizedBox(
-                              width: 150,
-                              child: DropdownButtonFormField<String>(
-                                value: _selectedDrop,
-                                hint: const Text('Aksi'),
-                                borderRadius: null,
-                                decoration: const InputDecoration.collapsed(
-                                    hintText: 'Aksi'),
-                                validator:
-                                    ValidationBuilder().required().build(),
-                                items: _drop
-                                    .map((e) => DropdownMenuItem<String>(
-                                          value: e,
-                                          child: Text(e),
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                  if (value == 'Edit') {
-                                    _toEditEquipmentAction(equipment.id!);
-                                  } else {
-                                    _toDeleteEquipmentAction(equipment.id!);
-                                  }
-                                },
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 5),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1, 2),
+                                spreadRadius: .5,
+                                blurRadius: .5,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(equipment.nama),
+                                  SizedBox(
+                                    width: 150,
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedDrop,
+                                      hint: const Text('Aksi'),
+                                      borderRadius: null,
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                              hintText: 'Aksi'),
+                                      validator: ValidationBuilder()
+                                          .required()
+                                          .build(),
+                                      items: _drop
+                                          .map((e) => DropdownMenuItem<String>(
+                                                value: e,
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        if (value == 'Edit') {
+                                          _toEditEquipmentAction(equipment.id!);
+                                        } else {
+                                          _toDeleteEquipmentAction(
+                                              equipment.id!);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 );
-              },
-            );
-          }
+              }
 
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _toCreateEquipmentAction,

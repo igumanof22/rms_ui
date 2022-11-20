@@ -20,7 +20,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
     try {
       emit(FurnitureLoading());
 
-      List<Furniture> listFurniture = await FurnitureService.fetch();
+      List<Furniture> listFurniture = await FurnitureService.fetch(event.name);
 
       emit(FurnitureInitialized(listFurniture: listFurniture));
     } catch (e) {
@@ -60,7 +60,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses tambah Furnitur');
 
       emit(FurnitureSuccess());
-      add(FurnitureFetch());
+      add(FurnitureFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onCreate');
 
@@ -81,7 +81,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses ubah Furnitur');
 
       emit(FurnitureSuccess());
-      add(FurnitureFetch());
+      add(FurnitureFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onUpdate');
 
@@ -103,8 +103,8 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
 
       emit(FurnitureSuccess());
 
-      add(FurnitureFetch());
-      add(FurnitureFetch());
+      add(FurnitureFetch(name: ''));
+      add(FurnitureFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onDelete');
 

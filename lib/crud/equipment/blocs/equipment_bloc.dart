@@ -20,7 +20,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
     try {
       emit(EquipmentLoading());
 
-      List<Equipment> listEquipment = await EquipmentService.fetch();
+      List<Equipment> listEquipment = await EquipmentService.fetch(event.name);
 
       emit(EquipmentInitialized(listEquipment: listEquipment));
     } catch (e) {
@@ -59,7 +59,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses tambah peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch());
+      add(EquipmentFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onCreate');
 
@@ -79,7 +79,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses ubah peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch());
+      add(EquipmentFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 
@@ -99,7 +99,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses hapus peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch());
+      add(EquipmentFetch(name: ''));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 
