@@ -7,6 +7,7 @@ import 'package:rms_ui/barrel/services.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
+  final List<Equipment> _list = [];
   EquipmentBloc() : super(EquipmentUninitialized()) {
     on(_onCreate);
     on(_onUpdate);
@@ -20,9 +21,18 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
     try {
       emit(EquipmentLoading());
 
-      List<Equipment> listEquipment = await EquipmentService.fetch(event.name);
+      int currentPage = event.page;
+      int? nextPage = currentPage + 1;
+      List<Equipment> listEquipment =
+          await EquipmentService.fetch(event.name, event.limit, currentPage);
 
-      emit(EquipmentInitialized(listEquipment: listEquipment));
+      _list.addAll(listEquipment);
+
+      if (listEquipment.isEmpty) {
+        nextPage = null;
+      }
+
+      emit(EquipmentInitialized(listEquipment: listEquipment, nextPage: nextPage));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onFetch');
 
@@ -59,7 +69,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses tambah peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch(name: ''));
+      add(EquipmentFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onCreate');
 
@@ -79,7 +89,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses ubah peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch(name: ''));
+      add(EquipmentFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 
@@ -99,7 +109,7 @@ class EquipmentBloc extends Bloc<EquipmentEvent, EquipmentState> {
       showSnackbar('Sukses hapus peralatan');
 
       emit(EquipmentSuccess());
-      add(EquipmentFetch(name: ''));
+      add(EquipmentFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'EquipmentBloc - _onUpdate');
 

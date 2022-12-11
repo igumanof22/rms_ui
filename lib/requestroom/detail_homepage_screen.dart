@@ -79,7 +79,8 @@ class _DetailHomePageScreenState extends State<DetailHomePageScreen> {
       listener: _detailRequestRoomListener,
       child: WillPopScope(
         onWillPop: () {
-          _requestRoomBloc.add(RequestRoomFetch(requestId: ''));
+          _requestRoomBloc
+              .add(RequestRoomFetch(requestId: '', limit: 20, page: 0));
           return Future.value(true);
         },
         child: Scaffold(

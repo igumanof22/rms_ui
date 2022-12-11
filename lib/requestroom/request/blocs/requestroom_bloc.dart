@@ -8,6 +8,7 @@ import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
+  final List<RequestRoom> _list = [];
   RequestRoomBloc() : super(RequestRoomUninitialized()) {
     on(_onSubmit);
     on(_onDraft);
@@ -21,9 +22,19 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
     try {
       emit(RequestRoomLoading());
 
-      List<RequestRoom> listRequestRoom = await RequestRoomService.fetch(event.requestId);
+      int currentPage = event.page;
+      int? nextPage = currentPage + 1;
+      List<RequestRoom> listRequestRoom = await RequestRoomService.fetch(
+          event.requestId, event.limit, currentPage);
 
-      emit(RequestRoomInitialized(listRequestRoom: listRequestRoom));
+       _list.addAll(listRequestRoom);
+
+        if (listRequestRoom.length < event.limit) {
+          nextPage = null;
+        }
+
+        emit(
+            RequestRoomInitialized(listRequestRoom: _list, nextPage: nextPage));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onFetch');
 
@@ -65,7 +76,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
 
       emit(RequestRoomSuccess());
 
-      add(RequestRoomFetch(requestId: ''));
+      add(RequestRoomFetch(requestId: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onSubmit');
 
@@ -88,7 +99,7 @@ class RequestRoomBloc extends Bloc<RequestRoomEvent, RequestRoomState> {
 
       emit(RequestRoomSuccess());
 
-      add(RequestRoomFetch(requestId: ''));
+      add(RequestRoomFetch(requestId: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'RequestRoomBloc - _onDraft');
 

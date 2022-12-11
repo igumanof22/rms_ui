@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/services/app.dart';
@@ -7,14 +5,9 @@ import 'package:rms_ui/services/app.dart';
 class FurnitureService {
   static final Dio _dio = App.instance.dio;
 
-  static Future<List<Furniture>> fetch(String name) async {
-    Response response;
-
-    if (name.isEmpty) {
-      response = await _dio.get('/crud/furniture');
-    } else {
-      response = await _dio.get('/crud/furniture?name=$name');
-    }
+  static Future<List<Furniture>> fetch(String name, int limit, int page) async {
+    Response response =
+        await _dio.get('/crud/furniture?limit=$limit&page=$page&name=$name');
 
     return (response.data['data']['content'] as List)
         .map((elm) => Furniture.fromMap(elm))

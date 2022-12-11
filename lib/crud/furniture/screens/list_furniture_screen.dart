@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
@@ -19,13 +20,24 @@ class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
   final List<String> _drop = ['Edit', 'Hapus'];
   String? _selectedDrop;
 
+  final PagingController<int, Furniture> _pagingController =
+      PagingController(firstPageKey: 0);
+
   @override
   void initState() {
     _furnitureBloc = BlocProvider.of(context);
 
-    _furnitureBloc.add(FurnitureFetch(name: ''));
+    _pagingController.addPageRequestListener((pageKey) {
+      _furnitureBloc.add(FurnitureFetch(name: '', limit: 20, page: pageKey));
+    });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   void _toCreateFurnitureAction() {
@@ -52,83 +64,76 @@ class _HomeFurnitureScreen extends State<HomeFurnitureScreen> {
             hintText: 'Cari Berdasarkan Nama',
           ),
           onSubmitted: (value) {
-            _furnitureBloc.add(FurnitureFetch(name: value));
+            _furnitureBloc.add(FurnitureFetch(name: value, limit: 20, page: 0));
           },
         ),
-        BlocBuilder<FurnitureBloc, FurnitureState>(
-          builder: (context, state) {
+        BlocListener<FurnitureBloc, FurnitureState>(
+          listener: (context, state) {
             if (state is FurnitureInitialized) {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: state.listFurniture.length,
-                  itemBuilder: (context, index) {
-                    Furniture furniture = state.listFurniture[index];
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 5),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(1, 2),
-                              spreadRadius: .5,
-                              blurRadius: .5,
-                            )
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(furniture.nama),
-                                SizedBox(
-                                  width: 150,
-                                  child: DropdownButtonFormField<String>(
-                                    value: _selectedDrop,
-                                    hint: const Text('Aksi'),
-                                    borderRadius: null,
-                                    decoration: const InputDecoration.collapsed(
-                                        hintText: 'Aksi'),
-                                    validator:
-                                        ValidationBuilder().required().build(),
-                                    items: _drop
-                                        .map((e) => DropdownMenuItem<String>(
-                                              value: e,
-                                              child: Text(e),
-                                            ))
-                                        .toList(),
-                                    onChanged: (value) {
-                                      if (value == 'Edit') {
-                                        _toEditFurnitureAction(furniture.id!);
-                                      } else {
-                                        _toDeleteFurnitureAction(furniture.id!);
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
+              _pagingController.value = PagingState(
+                  nextPageKey: state.nextPage, itemList: state.listFurniture);
             }
-
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
           },
+          child: PagedListView(
+            pagingController: _pagingController,
+            builderDelegate: PagedChildBuilderDelegate<Furniture>(
+              itemBuilder: (context, item, index) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(1, 2),
+                        spreadRadius: .5,
+                        blurRadius: .5,
+                      )
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(item.nama),
+                          SizedBox(
+                            width: 150,
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedDrop,
+                              hint: const Text('Aksi'),
+                              borderRadius: null,
+                              decoration: const InputDecoration.collapsed(
+                                  hintText: 'Aksi'),
+                              validator: ValidationBuilder().required().build(),
+                              items: _drop
+                                  .map((e) => DropdownMenuItem<String>(
+                                        value: e,
+                                        child: Text(e),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                if (value == 'Edit') {
+                                  _toEditFurnitureAction(item.id!);
+                                } else {
+                                  _toDeleteFurnitureAction(item.id!);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ]),
       floatingActionButton: FloatingActionButton(

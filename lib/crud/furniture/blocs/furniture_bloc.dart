@@ -7,6 +7,7 @@ import 'package:rms_ui/barrel/services.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
+  final List<Furniture> _list = [];
   FurnitureBloc() : super(FurnitureUninitialized()) {
     on(_onCreate);
     on(_onUpdate);
@@ -20,9 +21,18 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
     try {
       emit(FurnitureLoading());
 
-      List<Furniture> listFurniture = await FurnitureService.fetch(event.name);
+      int currentPage = event.page;
+      int? nextPage = currentPage + 1;
+      List<Furniture> listFurniture =
+          await FurnitureService.fetch(event.name, event.limit, currentPage);
 
-      emit(FurnitureInitialized(listFurniture: listFurniture));
+      _list.addAll(listFurniture);
+
+      if (listFurniture.isEmpty) {
+        nextPage = null;
+      }
+
+      emit(FurnitureInitialized(listFurniture: listFurniture, nextPage: nextPage));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onFetch');
 
@@ -60,7 +70,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses tambah Furnitur');
 
       emit(FurnitureSuccess());
-      add(FurnitureFetch(name: ''));
+      add(FurnitureFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onCreate');
 
@@ -81,7 +91,7 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
       showSnackbar('Sukses ubah Furnitur');
 
       emit(FurnitureSuccess());
-      add(FurnitureFetch(name: ''));
+      add(FurnitureFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onUpdate');
 
@@ -103,8 +113,8 @@ class FurnitureBloc extends Bloc<FurnitureEvent, FurnitureState> {
 
       emit(FurnitureSuccess());
 
-      add(FurnitureFetch(name: ''));
-      add(FurnitureFetch(name: ''));
+      add(FurnitureFetch(name: '', limit: 20, page: 0));
+      add(FurnitureFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'FurnitureBloc - _onDelete');
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
@@ -23,14 +24,26 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
   final List<String> _drop = ['Edit', 'Hapus'];
   String? _selectedDrop;
 
+  final PagingController<int, Room> _pagingController =
+      PagingController(firstPageKey: 0);
+
   @override
   void initState() {
     _roomBloc = BlocProvider.of(context);
 
-    _roomBloc.add(RoomFetch(roomId: ''));
     _role = pref.getString('role');
 
+    _pagingController.addPageRequestListener((pageKey) {
+      _roomBloc.add(RoomFetch(roomId: '', limit: 20, page: pageKey));
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   void _toCreateRoomAction() {
@@ -61,87 +74,78 @@ class _HomeRoomScreenState extends State<HomeRoomScreen> {
               hintText: 'Cari Berdasarkan Room ID',
             ),
             onSubmitted: (value) {
-              _roomBloc.add(RoomFetch(roomId: value));
+              _roomBloc.add(RoomFetch(roomId: value, limit: 20, page: 0));
             },
           ),
-          BlocBuilder<RoomBloc, RoomState>(
-            builder: (context, state) {
+          BlocListener(
+            listener: (context, state) {
               if (state is RoomInitialized) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.listRoom.length,
-                    itemBuilder: (context, index) {
-                      Room room = state.listRoom[index];
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: GestureDetector(
-                          onTap: () =>
-                              _toDetailRoomAction(room.roomItem, room.roomId),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 5),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(1, 2),
-                                  spreadRadius: .5,
-                                  blurRadius: .5,
-                                )
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(room.roomId),
-                                Text(room.building),
-                                Text(room.category),
-                                Text(room.totalCapacity.toString()),
-                                if (_role == 'ART' || _role == 'ADMIN')
-                                  SizedBox(
-                                    width: 150,
-                                    child: DropdownButtonFormField<String>(
-                                      value: _selectedDrop,
-                                      hint: const Text('Aksi'),
-                                      borderRadius: null,
-                                      decoration:
-                                          const InputDecoration.collapsed(
-                                              hintText: 'Aksi'),
-                                      validator: ValidationBuilder()
-                                          .required()
-                                          .build(),
-                                      items: _drop
-                                          .map((e) => DropdownMenuItem<String>(
-                                                value: e,
-                                                child: Text(e),
-                                              ))
-                                          .toList(),
-                                      onChanged: (value) {
-                                        if (value == 'Edit') {
-                                          _toEditRoomAction(room);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
-
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              _pagingController.value = PagingState(
+                  nextPageKey: state.nextPage, itemList: state.listRoom);
+            }
             },
-          ),
+            child: PagedListView(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<Room>(
+                  itemBuilder: (context, item, index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: GestureDetector(
+                      onTap: () =>
+                          _toDetailRoomAction(item.roomItem, item.roomId),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 2, horizontal: 5),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(1, 2),
+                              spreadRadius: .5,
+                              blurRadius: .5,
+                            )
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(item.roomId),
+                            Text(item.building),
+                            Text(item.category),
+                            Text(item.totalCapacity.toString()),
+                            if (_role == 'ART' || _role == 'ADMIN')
+                              SizedBox(
+                                width: 150,
+                                child: DropdownButtonFormField<String>(
+                                  value: _selectedDrop,
+                                  hint: const Text('Aksi'),
+                                  borderRadius: null,
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: 'Aksi'),
+                                  validator:
+                                      ValidationBuilder().required().build(),
+                                  items: _drop
+                                      .map((e) => DropdownMenuItem<String>(
+                                            value: e,
+                                            child: Text(e),
+                                          ))
+                                      .toList(),
+                                  onChanged: (value) {
+                                    if (value == 'Edit') {
+                                      _toEditRoomAction(item);
+                                    }
+                                  },
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

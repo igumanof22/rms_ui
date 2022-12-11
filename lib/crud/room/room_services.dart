@@ -5,13 +5,9 @@ import 'package:rms_ui/services/app.dart';
 class RoomService {
   static final Dio _dio = App.instance.dio;
 
-  static Future<List<Room>> fetch(String roomId) async {
-    Response response;
-    if (roomId.isEmpty) {
-      response = await _dio.get('/crud/room');
-    } else {
-      response = await _dio.get('/crud/room?roomId=$roomId');
-    }
+  static Future<List<Room>> fetch(String roomId, int limit, int page) async {
+    Response response =
+        await _dio.get('/crud/room?limit=$limit&page=$page&roomId=$roomId');
 
     return (response.data['data']['content'] as List)
         .map((elm) => Room.fromMap(elm))

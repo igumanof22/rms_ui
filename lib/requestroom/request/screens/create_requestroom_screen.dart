@@ -44,7 +44,7 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
     _roomBloc = BlocProvider.of(context);
     _activityLevelBloc = BlocProvider.of(context);
 
-    _roomBloc.add(RoomFetch(roomId: ''));
+    _roomBloc.add(RoomFetch(roomId: '', limit: 999999, page: 0));
     _activityLevelBloc.add(ActivityLevelFetch());
 
     super.initState();
@@ -82,27 +82,27 @@ class _CreateRequestRoomScreenState extends State<CreateRequestRoomScreen> {
     }
   }
 
-  void _draftAction() {
-    if (_form.currentState!.validate()) {
-      Users user = Users(id: pref.getString('id')!);
-      RequestRoomDrafts requestRoom = RequestRoomDrafts(
-        startDate: _startDate,
-        endDate: _endDate,
-        startTime: _startTimeController.text.trim(),
-        endTime: _endTimeController.text.trim(),
-        activityName: _activityNameController.text.trim(),
-        activityLevel: _selectedActivityLevel,
-        participant: int.parse(_participantController.text.trim()),
-        room: _selectedRoom,
-        user: user,
-      );
+  // void _draftAction() {
+  //   if (_form.currentState!.validate()) {
+  //     Users user = Users(id: pref.getString('id')!);
+  //     RequestRoomDrafts requestRoom = RequestRoomDrafts(
+  //       startDate: _startDate,
+  //       endDate: _endDate,
+  //       startTime: _startTimeController.text.trim(),
+  //       endTime: _endTimeController.text.trim(),
+  //       activityName: _activityNameController.text.trim(),
+  //       activityLevel: _selectedActivityLevel,
+  //       participant: int.parse(_participantController.text.trim()),
+  //       room: _selectedRoom,
+  //       user: user,
+  //     );
 
-      _requestRoomBloc.add(RequestRoomDraft(
-          requestRoomDraft: requestRoom,
-          pictName: _pictName,
-          pictPath: _pictPath));
-    }
-  }
+  //     _requestRoomBloc.add(RequestRoomDraft(
+  //         requestRoomDraft: requestRoom,
+  //         pictName: _pictName,
+  //         pictPath: _pictPath));
+  //   }
+  // }
 
   void _showStartDatePickerAction() async {
     DateTime? date = await showDatePicker(

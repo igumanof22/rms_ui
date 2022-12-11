@@ -8,10 +8,13 @@ abstract class EquipmentEvent extends Equatable {
 
 class EquipmentFetch extends EquipmentEvent {
   final String name;
-  EquipmentFetch({required this.name});
+  final int limit;
+  final int page;
+
+  EquipmentFetch({required this.name, required this.limit, required this.page});
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [name, limit, page];
 }
 
 class EquipmentGet extends EquipmentEvent {

@@ -8,11 +8,14 @@ abstract class RequestRoomEvent extends Equatable {
 
 class RequestRoomFetch extends RequestRoomEvent {
   final String requestId;
+  final int limit;
+  final int page;
 
-  RequestRoomFetch({required this.requestId});
+  RequestRoomFetch(
+      {required this.requestId, required this.limit, required this.page});
 
   @override
-  List<Object?> get props => [requestId];
+  List<Object?> get props => [requestId, limit, page];
 }
 
 class RequestRoomGet extends RequestRoomEvent {

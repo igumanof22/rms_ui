@@ -7,6 +7,7 @@ import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/widgets/widgets.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
+  final List<Room> _list = [];
   RoomBloc() : super(RoomUninitialized()) {
     on(_onCreate);
     on(_onUpdate);
@@ -18,9 +19,18 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     try {
       emit(RoomLoading());
 
-      List<Room> listRoom = await RoomService.fetch(event.roomId);
+      int currentPage = event.page;
+      int? nextPage = currentPage + 1;
+      List<Room> listRoom =
+          await RoomService.fetch(event.roomId, event.limit, nextPage);
 
-      emit(RoomInitialized(listRoom: listRoom));
+      _list.addAll(listRoom);
+
+      if (listRoom.isEmpty) {
+        nextPage = null;
+      }
+
+      emit(RoomInitialized(listRoom: listRoom, nextPage: nextPage));
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onFetch');
 
@@ -57,7 +67,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       emit(RoomSuccess());
 
-      add(RoomFetch(roomId: ''));
+      add(RoomFetch(roomId: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onCreate');
 
@@ -78,7 +88,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
       emit(RoomSuccess());
 
-      add(RoomFetch(roomId: ''));
+      add(RoomFetch(roomId: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'RoomBloc - _onUpdate');
 

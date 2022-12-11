@@ -8,11 +8,13 @@ abstract class UsersEvent extends Equatable {
 
 class UsersFetch extends UsersEvent {
   final String name;
+  final int limit;
+  final int page;
 
-  UsersFetch({required this.name});
+  UsersFetch({required this.name, required this.limit, required this.page});
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [name, limit, page];
 }
 
 class UsersGet extends UsersEvent {

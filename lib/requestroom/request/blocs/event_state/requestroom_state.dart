@@ -14,13 +14,17 @@ class RequestRoomError extends RequestRoomState {}
 
 class RequestRoomSuccess extends RequestRoomState {}
 
+class RequestRoomLast extends RequestRoomState {}
+
 class RequestRoomInitialized extends RequestRoomState {
   final List<RequestRoom> listRequestRoom;
+  final int? nextPage;
 
-  RequestRoomInitialized({required this.listRequestRoom});
+  RequestRoomInitialized(
+      {required this.listRequestRoom, required this.nextPage});
 
   @override
-  List<Object?> get props => [listRequestRoom];
+  List<Object?> get props => [listRequestRoom, nextPage];
 }
 
 class RequestRoomGetData extends RequestRoomState {

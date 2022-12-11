@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:rms_ui/barrel/blocs.dart';
 import 'package:rms_ui/barrel/models.dart';
 import 'package:rms_ui/barrel/screens.dart';
@@ -20,13 +21,26 @@ class _HomePageScreenState extends State<HomePageScreen> {
   late String? role;
   late RequestRoomBloc _requestRoomBloc;
 
+  final PagingController<int, RequestRoom> _pagingController =
+      PagingController(firstPageKey: 0);
+
   @override
   void initState() {
     _requestRoomBloc = BlocProvider.of(context);
     role = pref.getString('role');
-    _requestRoomBloc.add(RequestRoomFetch(requestId: ''));
+
+    _pagingController.addPageRequestListener((pageKey) {
+      _requestRoomBloc
+          .add(RequestRoomFetch(requestId: '', limit: 20, page: pageKey));
+    });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   void _toCreateRequestAction() {
@@ -45,68 +59,64 @@ class _HomePageScreenState extends State<HomePageScreen> {
             hintText: 'Cari Berdasarkan Request Id',
           ),
           onSubmitted: (value) {
-            _requestRoomBloc.add(RequestRoomFetch(requestId: value));
+            _requestRoomBloc
+                .add(RequestRoomFetch(requestId: value, limit: 10, page: 0));
           },
         ),
-        BlocBuilder<RequestRoomBloc, RequestRoomState>(
-          builder: (context, state) {
+        BlocListener<RequestRoomBloc, RequestRoomState>(
+          listener: (context, state) {
             if (state is RequestRoomInitialized) {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: state.listRequestRoom.length,
-                  itemBuilder: (context, index) {
-                    RequestRoom requestRoom = state.listRequestRoom[index];
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: GestureDetector(
-                        onTap: () => Get.to(() => DetailHomePageScreen(
-                              id: requestRoom.id!,
-                              requestId: requestRoom.requestId!,
-                            )),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 5),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                offset: Offset(1, 2),
-                                spreadRadius: .5,
-                                blurRadius: .5,
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(requestRoom.requestId!),
-                                  Text(requestRoom.status!),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
+              _pagingController.value = PagingState(
+                  nextPageKey: state.nextPage, itemList: state.listRequestRoom);
             }
-
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
           },
+          child: Expanded(
+            child: PagedListView(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<RequestRoom>(
+                itemBuilder: (context, item, index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: GestureDetector(
+                    onTap: () => Get.to(() => DetailHomePageScreen(
+                          id: item.id!,
+                          requestId: item.requestId!,
+                        )),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 5),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1, 2),
+                            spreadRadius: .5,
+                            blurRadius: .5,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(item.requestId!),
+                              Text(item.status!),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ]),
       drawer: const DrawerMenu(),

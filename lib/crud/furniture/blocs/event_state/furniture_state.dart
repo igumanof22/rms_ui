@@ -16,11 +16,12 @@ class FurnitureSuccess extends FurnitureState {}
 
 class FurnitureInitialized extends FurnitureState {
   final List<Furniture> listFurniture;
+  final int? nextPage;
 
-  FurnitureInitialized({required this.listFurniture});
+  FurnitureInitialized({required this.listFurniture, this.nextPage});
 
   @override
-  List<Object?> get props => [listFurniture];
+  List<Object?> get props => [listFurniture, nextPage];
 }
 
 class FurnitureGetData extends FurnitureState {

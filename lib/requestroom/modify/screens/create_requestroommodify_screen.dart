@@ -47,7 +47,7 @@ class _CreateRequestRoomModifyScreenState
     _roomBloc = BlocProvider.of(context);
     _activityLevelBloc = BlocProvider.of(context);
 
-    _roomBloc.add(RoomFetch(roomId: ''));
+    _roomBloc.add(RoomFetch(roomId: '', limit: 999999, page: 0));
     _activityLevelBloc.add(ActivityLevelFetch());
 
     super.initState();

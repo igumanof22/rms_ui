@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final SharedPreferences pref = App.instance.pref;
+  final List<Users> _list = [];
 
   UsersBloc() : super(UsersUninitialized()) {
     on(_onCreate);
@@ -23,9 +24,17 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     try {
       emit(UsersLoading());
 
-      List<Users> listUsers = await UsersService.fetch(event.name);
+      int currentPage = event.page;
+      int? nextPage = currentPage + 1;
+      List<Users> listUsers =
+          await UsersService.fetch(event.name, event.limit, currentPage);
 
-      emit(UsersInitialized(listUsers: listUsers));
+      _list.addAll(listUsers);
+      if (listUsers.isEmpty) {
+        nextPage = null;
+      }
+
+      emit(UsersInitialized(listUsers: _list, nextPage: nextPage));
     } catch (e) {
       log(e.toString(), name: 'UsersBloc - _onFetch');
 
@@ -61,7 +70,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
       emit(UsersSuccess());
 
-      add(UsersFetch(name: ''));
+      add(UsersFetch(name: '', limit: 20, page: 0));
     } catch (e) {
       log(e.toString(), name: 'UsersBloc - _onCreate');
 

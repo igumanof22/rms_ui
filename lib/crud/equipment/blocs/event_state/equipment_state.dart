@@ -16,11 +16,12 @@ class EquipmentSuccess extends EquipmentState {}
 
 class EquipmentInitialized extends EquipmentState {
   final List<Equipment> listEquipment;
+  final int? nextPage;
 
-  EquipmentInitialized({required this.listEquipment});
+  EquipmentInitialized({required this.listEquipment, this.nextPage});
 
   @override
-  List<Object?> get props => [listEquipment];
+  List<Object?> get props => [listEquipment, nextPage];
 }
 
 class EquipmentGetData extends EquipmentState {

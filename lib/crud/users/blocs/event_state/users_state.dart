@@ -16,11 +16,12 @@ class UsersSuccess extends UsersState {}
 
 class UsersInitialized extends UsersState {
   final List<Users> listUsers;
+  final int? nextPage;
 
-  UsersInitialized({required this.listUsers});
+  UsersInitialized({required this.listUsers, this.nextPage});
 
   @override
-  List<Object?> get props => [listUsers];
+  List<Object?> get props => [listUsers, nextPage];
 }
 
 class UsersGetData extends UsersState {

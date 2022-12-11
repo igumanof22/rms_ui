@@ -10,14 +10,10 @@ import 'package:rms_ui/widgets/snackbar.dart';
 class RequestRoomService {
   static final Dio _dio = App.instance.dio;
 
-  static Future<List<RequestRoom>> fetch(String requestId) async {
-    Response response;
-
-    if (requestId.isEmpty) {
-      response = await _dio.get('/bpmn/RequestRoom');
-    } else {
-      response = await _dio.get('/bpmn/RequestRoom?requestId=$requestId');
-    }
+  static Future<List<RequestRoom>> fetch(
+      String requestId, int limit, int page) async {
+    Response response = await _dio
+        .get('/bpmn/RequestRoom?limit=$limit&page=$page&requestId=$requestId');
 
     return (response.data['data']['content'] as List)
         .map((elm) => RequestRoom.fromMap(elm))

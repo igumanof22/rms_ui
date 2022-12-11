@@ -5,14 +5,9 @@ import 'package:rms_ui/services/app.dart';
 class EquipmentService {
   static final Dio _dio = App.instance.dio;
 
-  static Future<List<Equipment>> fetch(String name) async {
-    Response response;
-
-    if (name.isEmpty) {
-      response = await _dio.get('/crud/equipment');
-    } else {
-      response = await _dio.get('/crud/equipment?name=$name');
-    }
+  static Future<List<Equipment>> fetch(String name, int limit, int page) async {
+    Response response =
+        await _dio.get('/crud/equipment?limit=$limit&page=$page&name=$name');
 
     return (response.data['data']['content'] as List)
         .map((elm) => Equipment.fromMap(elm))

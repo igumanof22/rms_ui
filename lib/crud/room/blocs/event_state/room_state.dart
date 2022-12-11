@@ -16,11 +16,12 @@ class RoomSuccess extends RoomState {}
 
 class RoomInitialized extends RoomState {
   final List<Room> listRoom;
+  final int? nextPage;
 
-  RoomInitialized({required this.listRoom});
+  RoomInitialized({required this.listRoom, this.nextPage});
 
   @override
-  List<Object?> get props => [listRoom];
+  List<Object?> get props => [listRoom, nextPage];
 }
 
 class RoomGetData extends RoomState {

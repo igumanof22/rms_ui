@@ -8,11 +8,13 @@ abstract class FurnitureEvent extends Equatable {
 
 class FurnitureFetch extends FurnitureEvent {
   final String name;
+  final int limit;
+  final int page;
 
-  FurnitureFetch({required this.name});
+  FurnitureFetch({required this.name, required this.limit, required this.page});
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [name, limit, page];
 }
 
 class FurnitureGet extends FurnitureEvent {
